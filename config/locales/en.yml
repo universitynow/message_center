@@ -1,0 +1,7 @@
+en:
+  message_center:
+    message_mailer:
+      subject_new: "Message Center new message: %{subject}"
+      subject_reply: "Message Center new reply: %{subject}"
+    notification_mailer:
+      subject: "Message Center new notification: %{subject}"
