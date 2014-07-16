@@ -13,12 +13,12 @@ class MessageCenter::InstallGenerator < Rails::Generators::Base #:nodoc:
   end
 
   def create_initializer_file
-    template 'initializer.rb', 'config/initializers/mailboxer.rb'
+    template 'initializer.rb', 'config/initializers/message_center.rb'
   end
 
   def copy_migrations
     if Rails.version < "3.1"
-      migrations = [["20110511145103_create_mailboxer.rb","create_mailboxer.rb"], ["20131206080416_add_conversation_optout.rb","add_conversation_optout.rb"]],
+      migrations = [["20110511145103_create_message_center.rb","create_message_center.rb"], ["20131206080416_add_conversation_optout.rb","add_conversation_optout.rb"]],
       migrations.each do |migration|
         migration_template "../../../../db/migrate/" + migration[0], "db/migrate/" + migration[1]
       end
@@ -26,7 +26,7 @@ class MessageCenter::InstallGenerator < Rails::Generators::Base #:nodoc:
       require 'rake'
       Rails.application.load_tasks
       Rake::Task['railties:install:migrations'].reenable
-      Rake::Task['mailboxer_engine:install:migrations'].invoke
+      Rake::Task['message_center_engine:install:migrations'].invoke
     end
   end
 end

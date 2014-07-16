@@ -1,14 +1,15 @@
-class CreateMailboxer < ActiveRecord::Migration
+class CreateMessageCenter < ActiveRecord::Migration
   def self.up    
   #Tables
   	#Conversations
-    create_table :mailboxer_conversations do |t|
+    create_table :message_center_conversations do |t|
       t.column :subject, :string, :default => ""
       t.column :created_at, :datetime, :null => false
       t.column :updated_at, :datetime, :null => false
+      t.column :messages_count, :integer, :default => 0
     end    
   	#Receipts
-    create_table :mailboxer_receipts do |t|
+    create_table :message_center_receipts do |t|
       t.references :receiver, :polymorphic => true
       t.column :notification_id, :integer, :null => false
       t.column :is_read, :boolean, :default => false
@@ -19,7 +20,7 @@ class CreateMailboxer < ActiveRecord::Migration
       t.column :updated_at, :datetime, :null => false
     end    
   	#Notifications and Messages
-    create_table :mailboxer_notifications do |t|
+    create_table :message_center_notifications do |t|
       t.column :type, :string
       t.column :body, :text
       t.column :subject, :string, :default => ""
@@ -39,27 +40,27 @@ class CreateMailboxer < ActiveRecord::Migration
   #Indexes
   	#Conversations
   	#Receipts
-  	add_index "mailboxer_receipts","notification_id"
+  	add_index "message_center_receipts","notification_id"
 
   	#Messages  
-  	add_index "mailboxer_notifications","conversation_id"
+  	add_index "message_center_notifications","conversation_id"
   
   #Foreign keys    
   	#Conversations
   	#Receipts
-  	add_foreign_key "mailboxer_receipts", "mailboxer_notifications", :name => "receipts_on_notification_id", :column => "notification_id"
+  	add_foreign_key "message_center_receipts", "message_center_notifications", :name => "receipts_on_notification_id", :column => "notification_id"
   	#Messages  
-  	add_foreign_key "mailboxer_notifications", "mailboxer_conversations", :name => "notifications_on_conversation_id", :column => "conversation_id"
+  	add_foreign_key "message_center_notifications", "message_center_conversations", :name => "notifications_on_conversation_id", :column => "conversation_id"
   end
   
   def self.down
   #Tables  	
-  	remove_foreign_key "mailboxer_receipts", :name => "receipts_on_notification_id"
-  	remove_foreign_key "mailboxer_notifications", :name => "notifications_on_conversation_id"
+  	remove_foreign_key "message_center_receipts", :name => "receipts_on_notification_id"
+  	remove_foreign_key "message_center_notifications", :name => "notifications_on_conversation_id"
   	
   #Indexes
-    drop_table :mailboxer_receipts
-    drop_table :mailboxer_conversations
-    drop_table :mailboxer_notifications
+    drop_table :message_center_receipts
+    drop_table :message_center_conversations
+    drop_table :message_center_notifications
   end
 end

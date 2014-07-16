@@ -1,5 +1,5 @@
 class MessageCenter::Notification < ActiveRecord::Base
-  self.table_name = :mailboxer_notifications
+  self.table_name = :message_center_notifications
 
   include MessageCenter::NotificationCoreConcerns
 
