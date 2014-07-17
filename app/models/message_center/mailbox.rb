@@ -1,5 +1,5 @@
 class MessageCenter::Mailbox
 
-  include MessageCenter::MailboxCoreConcerns
+  include MessageCenter::Concerns::Models::Mailbox
 
 end

@@ -1,4 +1,4 @@
-module MessageCenter::MailboxCoreConcerns
+module MessageCenter::Concerns::Models::Mailbox
   extend ActiveSupport::Concern
 
   included do

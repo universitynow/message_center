@@ -1,4 +1,4 @@
-module MessageCenter::ReceiptCoreConcerns
+module MessageCenter::Concerns::Models::Receipt
   extend ActiveSupport::Concern
 
   included do

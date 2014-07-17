@@ -1,4 +1,4 @@
-module MessageCenter::ConversationCoreConcerns
+module MessageCenter::Concerns::Models::Conversation
   extend ActiveSupport::Concern
 
   included do

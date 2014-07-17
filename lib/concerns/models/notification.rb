@@ -1,4 +1,4 @@
-module MessageCenter::NotificationCoreConcerns
+module MessageCenter::Concerns::Models::Notification
   extend ActiveSupport::Concern
 
   included do

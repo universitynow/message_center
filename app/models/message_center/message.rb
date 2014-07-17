@@ -1,5 +1,5 @@
 class MessageCenter::Message < MessageCenter::Notification
 
-  include MessageCenter::MessageCoreConcerns
+  include MessageCenter::Concerns::Models::Message
 
 end
