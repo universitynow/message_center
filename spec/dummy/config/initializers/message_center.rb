@@ -4,7 +4,7 @@ MessageCenter.setup do |config|
   config.uses_emails = true
   
   #Configures the default from for the email sent for Messages and Notifications of Mailboxer
-  config.default_from = "no-reply@mailboxer.com"
+  config.default_from = "no-reply@message_center.com"
   
   #Configures the methods needed by mailboxer
   config.email_method = :mailboxer_email

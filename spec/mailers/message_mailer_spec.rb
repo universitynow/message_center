@@ -67,7 +67,7 @@ describe MessageCenter::MessageMailer do
 
   context "mailer_wants_array is true" do
     class ArrayMailer < MessageCenter::MessageMailer
-      default template_path: 'mailboxer/message_mailer'
+      default template_path: 'message_center/message_mailer'
 
       def new_message_email(message, receivers)
         receivers.each { |receiver| super(message, receiver) if receiver.mailboxer_email(message).present? }

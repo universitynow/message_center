@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require(:default, Rails.env) if defined?(Bundler)
-require "mailboxer"
+require "message_center"
 
 module Dummy
   class Application < Rails::Application

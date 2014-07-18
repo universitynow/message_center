@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '~> 4.1.0'
-gem 'mailboxer', :path => '../../'
+gem 'message_center', :path => '../../'
 gem 'factory_girl'
 
 # Bundle edge Rails instead:

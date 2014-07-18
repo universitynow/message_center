@@ -27,19 +27,19 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.datetime "updated_at"
   end
 
-  create_table "mailboxer_conversation_opt_outs", :force => true do |t|
+  create_table "message_center_conversation_opt_outs", :force => true do |t|
     t.integer "unsubscriber_id"
     t.string  "unsubscriber_type"
     t.integer "conversation_id"
   end
 
-  create_table "mailboxer_conversations", :force => true do |t|
+  create_table "message_center_conversations", :force => true do |t|
     t.string   "subject",    :default => ""
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
   end
 
-  create_table "mailboxer_notifications", :force => true do |t|
+  create_table "message_center_notifications", :force => true do |t|
     t.string   "type"
     t.text     "body"
     t.string   "subject",              :default => ""
@@ -57,9 +57,9 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.datetime "expires"
   end
 
-  add_index "mailboxer_notifications", ["conversation_id"], :name => "index_mailboxer_notifications_on_conversation_id"
+  add_index "message_center_notifications", ["conversation_id"], :name => "index_message_center_notifications_on_conversation_id"
 
-  create_table "mailboxer_receipts", :force => true do |t|
+  create_table "message_center_receipts", :force => true do |t|
     t.integer  "receiver_id"
     t.string   "receiver_type"
     t.integer  "notification_id",                                  :null => false
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.datetime "updated_at",                                       :null => false
   end
 
-  add_index "mailboxer_receipts", ["notification_id"], :name => "index_mailboxer_receipts_on_notification_id"
+  add_index "message_center_receipts", ["notification_id"], :name => "index_message_center_receipts_on_notification_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"
