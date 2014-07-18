@@ -2,7 +2,7 @@ module MessageCenter::Concerns::Models::Notification
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :recipients
+    attr_writer :recipients
     attr_accessible :body, :subject, :global, :expires if MessageCenter.protected_attributes?
 
     belongs_to :sender, :polymorphic => :true
