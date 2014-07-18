@@ -1,4 +1,15 @@
 module MessageCenter
+
+  module Concerns
+    module Models
+      autoload :Conversation, 'concerns/models/conversation'
+      autoload :Mailbox, 'concerns/models/mailbox'
+      autoload :Message, 'concerns/models/message'
+      autoload :Notification, 'concerns/models/notification'
+      autoload :Receipt, 'concerns/models/receipt'
+    end
+  end
+
   module Models
     autoload :Messageable, 'message_center/models/messageable'
   end
