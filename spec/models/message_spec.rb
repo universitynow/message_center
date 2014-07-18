@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MessageCenter::Message do
+describe MessageCenter::Message, :type => :model do
   
   before do
     @entity1 = FactoryGirl.create(:user)
@@ -15,16 +15,16 @@ describe MessageCenter::Message do
   end  
   
   it "should have right recipients" do
-  	@receipt1.notification.recipients.count.should==2
-  	@receipt2.notification.recipients.count.should==2
-  	@receipt3.notification.recipients.count.should==2
-  	@receipt4.notification.recipients.count.should==2      
+  	expect(@receipt1.notification.recipients.count).to eq(2)
+  	expect(@receipt2.notification.recipients.count).to eq(2)
+  	expect(@receipt3.notification.recipients.count).to eq(2)
+  	expect(@receipt4.notification.recipients.count).to eq(2)      
   end
 
   it "should be able to be marked as deleted" do
-    @receipt1.deleted.should==false
+    expect(@receipt1.deleted).to eq(false)
     @message1.mark_as_deleted @entity1
-    @message1.is_deleted?(@entity1).should==true
+    expect(@message1.is_deleted?(@entity1)).to eq(true)
   end
     
 end

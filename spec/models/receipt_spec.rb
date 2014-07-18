@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MessageCenter::Receipt do
+describe MessageCenter::Receipt, :type => :model do
   
   before do
     @entity1 = FactoryGirl.create(:user)
@@ -17,28 +17,28 @@ describe MessageCenter::Receipt do
   end
   
   it "should be able to be marked as unread" do
-    @mail1.is_read.should==true
+    expect(@mail1.is_read).to eq(true)
     @mail1.mark_as_unread
-    @mail1.is_read.should==false
+    expect(@mail1.is_read).to eq(false)
   end
   
   it "should be able to be marked as read" do
-    @mail1.is_read.should==true
+    expect(@mail1.is_read).to eq(true)
     @mail1.mark_as_unread
     @mail1.mark_as_read
-    @mail1.is_read.should==true    
+    expect(@mail1.is_read).to eq(true)    
   end
 
   it "should be able to be marked as deleted" do
-    @mail1.deleted.should==false
+    expect(@mail1.deleted).to eq(false)
     @mail1.mark_as_deleted
-    @mail1.deleted.should==true
+    expect(@mail1.deleted).to eq(true)
   end
 
   it "should be able to be marked as not deleted" do
     @mail1.deleted=true
     @mail1.mark_as_not_deleted
-    @mail1.deleted.should==false
+    expect(@mail1.deleted).to eq(false)
   end
 
   context "STI models" do
@@ -49,7 +49,7 @@ describe MessageCenter::Receipt do
     end
 	
     it "should refer to the correct base class" do
-      @mail2.receiver_type.should == @entity3.class.base_class.to_s
+      expect(@mail2.receiver_type).to eq(@entity3.class.base_class.to_s)
     end
   end
   

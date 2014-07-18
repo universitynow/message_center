@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MessageCenter::Conversation do
+describe MessageCenter::Conversation, :type => :model do
 
   let!(:entity1)  { FactoryGirl.create(:user) }
   let!(:entity2)  { FactoryGirl.create(:user) }
@@ -12,61 +12,61 @@ describe MessageCenter::Conversation do
   let!(:message4) { receipt4.notification }
   let!(:conversation) { message1.conversation }
 
-  it { should validate_presence_of :subject }
-  it { should ensure_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }
+  it { is_expected.to validate_presence_of :subject }
+  it { is_expected.to ensure_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }
 
   it "should have proper original message" do
-    conversation.original_message.should == message1
+    expect(conversation.original_message).to eq(message1)
   end
 
   it "should have proper originator (first sender)" do
-    conversation.originator.should == entity1
+    expect(conversation.originator).to eq(entity1)
   end
 
   it "should have proper last message" do
-    conversation.last_message.should == message4
+    expect(conversation.last_message).to eq(message4)
   end
 
   it "should have proper last sender" do
-    conversation.last_sender.should == entity2
+    expect(conversation.last_sender).to eq(entity2)
   end
 
   it "should have all conversation users" do
-    conversation.recipients.count.should == 2
-    conversation.recipients.count.should == 2
-    conversation.recipients.count(entity1).should == 1
-    conversation.recipients.count(entity2).should == 1
+    expect(conversation.recipients.count).to eq(2)
+    expect(conversation.recipients.count).to eq(2)
+    expect(conversation.recipients.count(entity1)).to eq(1)
+    expect(conversation.recipients.count(entity2)).to eq(1)
   end
 
   it "should be able to be marked as deleted" do
     conversation.move_to_trash(entity1)
     conversation.mark_as_deleted(entity1)
-    conversation.should be_is_deleted(entity1)
+    expect(conversation).to be_is_deleted(entity1)
   end
 
   it "should be removed from the database once deleted by all participants" do
     conversation.mark_as_deleted(entity1)
     conversation.mark_as_deleted(entity2)
-    MessageCenter::Conversation.exists?(conversation.id).should be_false
+    expect(MessageCenter::Conversation.exists?(conversation.id)).to be_falsey
   end
 
   it "should be able to be marked as read" do
     conversation.mark_as_read(entity1)
-    conversation.should be_is_read(entity1)
+    expect(conversation).to be_is_read(entity1)
   end
 
   it "should be able to be marked as unread" do
     conversation.mark_as_read(entity1)
     conversation.mark_as_unread(entity1)
-    conversation.should be_is_unread(entity1)
+    expect(conversation).to be_is_unread(entity1)
   end
 
   it "should be able to add a new participant" do
     new_user = FactoryGirl.create(:user)
     conversation.add_participant(new_user)
-    conversation.participants.count.should == 3
-    conversation.participants.should include(new_user, entity1, entity2)
-    conversation.receipts_for(new_user).count.should == conversation.receipts_for(entity1).count
+    expect(conversation.participants.count).to eq(3)
+    expect(conversation.participants).to include(new_user, entity1, entity2)
+    expect(conversation.receipts_for(new_user).count).to eq(conversation.receipts_for(entity1).count)
   end
 
   it "should deliver messages to new participants" do
@@ -85,19 +85,19 @@ describe MessageCenter::Conversation do
 
     describe ".participant" do
       it "finds conversations with receipts for participant" do
-        MessageCenter::Conversation.participant(participant).should == [sentbox_conversation, inbox_conversation]
+        expect(MessageCenter::Conversation.participant(participant)).to eq([sentbox_conversation, inbox_conversation])
       end
     end
 
     describe ".inbox" do
       it "finds inbox conversations with receipts for participant" do
-        MessageCenter::Conversation.inbox(participant).should == [inbox_conversation]
+        expect(MessageCenter::Conversation.inbox(participant)).to eq([inbox_conversation])
       end
     end
 
     describe ".sentbox" do
       it "finds sentbox conversations with receipts for participant" do
-        MessageCenter::Conversation.sentbox(participant).should == [sentbox_conversation]
+        expect(MessageCenter::Conversation.sentbox(participant)).to eq([sentbox_conversation])
       end
     end
 
@@ -106,7 +106,7 @@ describe MessageCenter::Conversation do
         trashed_conversation = entity1.send_message(participant, "Body", "Subject").notification.conversation
         trashed_conversation.move_to_trash(participant)
 
-        MessageCenter::Conversation.trash(participant).should == [trashed_conversation]
+        expect(MessageCenter::Conversation.trash(participant)).to eq([trashed_conversation])
       end
     end
 
@@ -115,7 +115,7 @@ describe MessageCenter::Conversation do
         [sentbox_conversation, inbox_conversation].each {|c| c.mark_as_read(participant) }
         unread_conversation = entity1.send_message(participant, "Body", "Subject").notification.conversation
 
-        MessageCenter::Conversation.unread(participant).should == [unread_conversation]
+        expect(MessageCenter::Conversation.unread(participant)).to eq([unread_conversation])
       end
     end
   end
@@ -123,18 +123,18 @@ describe MessageCenter::Conversation do
   describe "#is_completely_trashed?" do
     it "returns true if all receipts in conversation are trashed for participant" do
       conversation.move_to_trash(entity1)
-      conversation.is_completely_trashed?(entity1).should be_true
+      expect(conversation.is_completely_trashed?(entity1)).to be_truthy
     end
   end
 
   describe "#is_deleted?" do
     it "returns false if a recipient has not deleted the conversation" do
-      conversation.is_deleted?(entity1).should be_false
+      expect(conversation.is_deleted?(entity1)).to be_falsey
     end
 
     it "returns true if a recipient has deleted the conversation" do
       conversation.mark_as_deleted(entity1)
-      conversation.is_deleted?(entity1).should be_true
+      expect(conversation.is_deleted?(entity1)).to be_truthy
     end
   end
 
@@ -142,12 +142,12 @@ describe MessageCenter::Conversation do
     it "returns true if both participants have deleted the conversation" do
       conversation.mark_as_deleted(entity1)
       conversation.mark_as_deleted(entity2)
-      conversation.is_orphaned?.should be_true
+      expect(conversation.is_orphaned?).to be_truthy
     end
 
     it "returns false if one has not deleted the conversation" do
       conversation.mark_as_deleted(entity1)
-      conversation.is_orphaned?.should be_false
+      expect(conversation.is_orphaned?).to be_falsey
     end
   end
 
@@ -207,7 +207,7 @@ describe MessageCenter::Conversation do
 
     context 'participant opted in' do
       it "returns true" do
-        expect(action).to be_true
+        expect(action).to be_truthy
       end
     end
 
@@ -216,7 +216,7 @@ describe MessageCenter::Conversation do
         conversation.opt_out(entity1)
       end
       it 'returns false' do
-        expect(action).to be_false
+        expect(action).to be_falsey
       end
     end
   end

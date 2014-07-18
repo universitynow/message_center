@@ -13,22 +13,26 @@ describe MessageCenter::MailDispatcher do
     context "no emails" do
       before { MessageCenter.uses_emails = false }
       after  { MessageCenter.uses_emails = true }
-      its(:call) { should be_false }
+
+      describe '#call' do
+        subject { super().call }
+        it { is_expected.to be_falsey }
+      end
     end
 
     context "mailer wants array" do
       before { MessageCenter.mailer_wants_array = true  }
       after  { MessageCenter.mailer_wants_array = false }
       it 'sends collection' do
-        subject.should_receive(:send_email).with(recipients)
+        expect(subject).to receive(:send_email).with(recipients)
         subject.call
       end
     end
 
     context "mailer doesnt want array" do
       it 'sends collection' do
-        subject.should_not_receive(:send_email).with(recipient1) #email is blank
-        subject.should_receive(:send_email).with(recipient2)
+        expect(subject).not_to receive(:send_email).with(recipient1) #email is blank
+        expect(subject).to receive(:send_email).with(recipient2)
         subject.call
       end
     end
@@ -39,7 +43,7 @@ describe MessageCenter::MailDispatcher do
     let(:mailer) { double 'mailer' }
 
     before(:each) do
-      subject.stub(:mailer).and_return mailer
+      allow(subject).to receive(:mailer).and_return mailer
     end
 
     context "with custom_deliver_proc" do
@@ -48,7 +52,7 @@ describe MessageCenter::MailDispatcher do
       before { MessageCenter.custom_deliver_proc = my_proc }
       after  { MessageCenter.custom_deliver_proc = nil     }
       it "triggers proc" do
-        my_proc.should_receive(:call).with(mailer, mailable, recipient1)
+        expect(my_proc).to receive(:call).with(mailer, mailable, recipient1)
         subject.send :send_email, recipient1
       end
     end
@@ -57,8 +61,8 @@ describe MessageCenter::MailDispatcher do
       let(:email) { double :email }
 
       it "triggers standard deliver chain" do
-        mailer.should_receive(:send_email).with(mailable, recipient1).and_return email
-        email.should_receive :deliver
+        expect(mailer).to receive(:send_email).with(mailable, recipient1).and_return email
+        expect(email).to receive :deliver
 
         subject.send :send_email, recipient1
       end
@@ -71,25 +75,38 @@ describe MessageCenter::MailDispatcher do
     context "mailable is a Message" do
       let(:mailable) { MessageCenter::Notification.new }
 
-      its(:mailer) { should be MessageCenter::NotificationMailer }
+      describe '#mailer' do
+        subject { super().send(:mailer) }
+        it { is_expected.to be MessageCenter::NotificationMailer }
+      end
 
       context "with custom mailer" do
         before { MessageCenter.notification_mailer = 'foo' }
         after  { MessageCenter.notification_mailer = nil   }
 
-        its(:mailer) { should eq 'foo' }
+        describe '#mailer' do
+          subject { super().send(:mailer) }
+          it { is_expected.to eq 'foo' }
+        end
       end
     end
 
     context "mailable is a Notification" do
       let(:mailable) { MessageCenter::Message.new }
-      its(:mailer) { should be MessageCenter::MessageMailer }
+
+      describe '#mailer' do
+        subject { super().send(:mailer) }
+        it { is_expected.to be MessageCenter::MessageMailer }
+      end
 
       context "with custom mailer" do
         before { MessageCenter.message_mailer = 'foo' }
         after  { MessageCenter.message_mailer = nil   }
 
-        its(:mailer) { should eq 'foo' }
+        describe '#mailer' do
+          subject { super().send(:mailer) }
+          it { is_expected.to eq 'foo' }
+        end
       end
     end
   end
@@ -99,16 +116,23 @@ describe MessageCenter::MailDispatcher do
       let(:conversation) { double 'conversation' }
       let(:mailable)     { double 'mailable', :conversation => conversation }
       before(:each) do
-        conversation.should_receive(:has_subscriber?).with(recipient1).and_return false
-        conversation.should_receive(:has_subscriber?).with(recipient2).and_return true
+        expect(conversation).to receive(:has_subscriber?).with(recipient1).and_return false
+        expect(conversation).to receive(:has_subscriber?).with(recipient2).and_return true
       end
 
-      its(:filtered_recipients){ should eq [recipient2] }
+      describe '#filtered_recipients' do
+        subject { super().send(:filtered_recipients) }
+        it { is_expected.to eq [recipient2] }
+      end
     end
 
     context 'doesnt respond to conversation' do
       let(:mailable) { double 'mailable' }
-      its(:filtered_recipients){ should eq recipients }
+
+      describe '#filtered_recipients' do
+        subject { super().send(:filtered_recipients) }
+        it { is_expected.to eq recipients }
+      end
     end
   end
 end
