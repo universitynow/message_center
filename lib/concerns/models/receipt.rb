@@ -4,6 +4,8 @@ module MessageCenter::Concerns::Models::Receipt
   included do
     attr_accessible :trashed, :is_read, :deleted if MessageCenter.protected_attributes?
 
+    store_accessor :properties, :label, :starred
+
     belongs_to :item, :class_name => "MessageCenter::Item", :validate => true, :autosave => true
     # TODO: for backwards compatibility - possibly remove :notification and :message or alias them both
     alias_method :notification, :item
@@ -112,6 +114,16 @@ module MessageCenter::Concerns::Models::Receipt
   #Marks the receipt as unread
   def mark_as_unread
     update_attributes(:is_read => false)
+  end
+
+  #Marks as starred
+  def mark_as_starred
+    update_attributes(:starred => true)
+  end
+
+  #Marks as unstarred
+  def mark_as_unstarred
+    update_attributes(:starred => false)
   end
 
   #Marks the receipt as trashed

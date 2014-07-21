@@ -47,6 +47,18 @@ module MessageCenter::Concerns::Models::Conversation
     receipts_for(participant).mark_as_unread
   end
 
+  #Mark the conversation as starred for one of the participants
+  def mark_as_starred(participant)
+    return unless participant
+    receipts_for(participant).each{|r| r.mark_as_starred}
+  end
+
+  #Mark the conversation as unstarred for one of the participants
+  def mark_as_unstarred(participant)
+    return unless participant
+    receipts_for(participant).each{|r| r.mark_as_unstarred}
+  end
+
   #Move the conversation to the trash for one of the participants
   def move_to_trash(participant)
     return unless participant

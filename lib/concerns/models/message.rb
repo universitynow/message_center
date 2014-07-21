@@ -4,7 +4,7 @@ module MessageCenter::Concerns::Models::Message
   included do
     attr_accessible :attachment if MessageCenter.protected_attributes?
 
-    belongs_to :conversation, :class_name => "MessageCenter::Conversation", :validate => true, :autosave => true
+    belongs_to :conversation, :class_name => "MessageCenter::Conversation", :validate => true, :autosave => true, :counter_cache => true
     validates_presence_of :sender
 
     class_attribute :on_deliver_callback
