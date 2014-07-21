@@ -4,24 +4,24 @@ module MessageCenter::Concerns::Models::Receipt
   included do
     attr_accessible :trashed, :is_read, :deleted if MessageCenter.protected_attributes?
 
-    belongs_to :notification, :class_name => "MessageCenter::Notification", :validate => true, :autosave => true
+    belongs_to :item, :class_name => "MessageCenter::Item", :validate => true, :autosave => true
+    # TODO: for backwards compatibility - possibly remove :notification and :message or alias them both
+    alias_method :notification, :item
     belongs_to :receiver, :polymorphic => :true
-    belongs_to :message, :class_name => "MessageCenter::Message", :foreign_key => "notification_id"
+    belongs_to :message, :class_name => "MessageCenter::Message", :foreign_key => "item_id"
 
     validates_presence_of :receiver
 
     scope :recipient, lambda { |recipient|
       where(:receiver_id => recipient.id,:receiver_type => recipient.class.base_class.to_s)
     }
-    #Notifications Scope checks type to be nil, not Notification because of STI behaviour
-    #with the primary class (no type is saved)
-    scope :notifications_receipts, lambda { joins(:notification).where('message_center_notifications.type' => nil) }
-    scope :messages_receipts, lambda { joins(:notification).where('message_center_notifications.type' => MessageCenter::Message.to_s) }
-    scope :notification, lambda { |notification|
-      where(:notification_id => notification.id)
+    scope :notifications_receipts, lambda { joins(:item).where('message_center_items.type' => 'MessageCenter::Notification') }
+    scope :messages_receipts, lambda { joins(:item).where('message_center_items.type' => 'MessageCenter::Message') }
+    scope :notification, lambda { |item|
+      where(:item_id => item.id)
     }
     scope :conversation, lambda { |conversation|
-      joins(:message).where('message_center_notifications.conversation_id' => conversation.id)
+      joins(:message).where('message_center_items.conversation_id' => conversation.id)
     }
     scope :sentbox, lambda { where(:mailbox_type => "sentbox") }
     scope :inbox, lambda { where(:mailbox_type => "inbox") }
@@ -134,17 +134,17 @@ module MessageCenter::Concerns::Models::Receipt
     update_attributes(:mailbox_type => :sentbox, :trashed => false)
   end
 
-  #Returns the conversation associated to the receipt if the notification is a Message
+  #Returns the conversation associated to the receipt if the item is a Message
   def conversation
     message.conversation if message.is_a? MessageCenter::Message
   end
 
-  #Returns if the participant have read the Notification
+  #Returns if the participant have read the Item
   def is_unread?
     !is_read
   end
 
-  #Returns if the participant have trashed the Notification
+  #Returns if the participant have trashed the Item
   def is_trashed?
     trashed
   end
@@ -154,9 +154,9 @@ module MessageCenter::Concerns::Models::Receipt
   #Removes the duplicate error about not present subject from Conversation if it has been already
   #raised by Message
   def remove_duplicate_errors
-    if errors["message_center_notification.conversation.subject"].present? and errors["message_center_notification.subject"].present?
-      errors["message_center_notification.conversation.subject"].each do |msg|
-        errors["message_center_notification.conversation.subject"].delete(msg)
+    if errors["message_center_item.conversation.subject"].present? and errors["message_center_item.subject"].present?
+      errors["message_center_item.conversation.subject"].each do |msg|
+        errors["message_center_item.conversation.subject"].delete(msg)
       end
     end
   end

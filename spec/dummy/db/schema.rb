@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.datetime "updated_at",                 :null => false
   end
 
-  create_table "message_center_notifications", :force => true do |t|
+  create_table "message_center_items", :force => true do |t|
     t.string   "type"
     t.text     "body"
     t.string   "subject",              :default => ""
@@ -57,12 +57,12 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.datetime "expires"
   end
 
-  add_index "message_center_notifications", ["conversation_id"], :name => "index_message_center_notifications_on_conversation_id"
+  add_index "message_center_items", ["conversation_id"], :name => "index_message_center_items_on_conversation_id"
 
   create_table "message_center_receipts", :force => true do |t|
     t.integer  "receiver_id"
     t.string   "receiver_type"
-    t.integer  "notification_id",                                  :null => false
+    t.integer  "item_id",                                  :null => false
     t.boolean  "is_read",                       :default => false
     t.boolean  "trashed",                       :default => false
     t.boolean  "deleted",                       :default => false
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.datetime "updated_at",                                       :null => false
   end
 
-  add_index "message_center_receipts", ["notification_id"], :name => "index_message_center_receipts_on_notification_id"
+  add_index "message_center_receipts", ["item_id"], :name => "index_message_center_receipts_on_item_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

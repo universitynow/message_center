@@ -12,8 +12,7 @@ module MessageCenter::Concerns::Models::Mailbox
 
   #Returns the notifications for the messageable
   def notifications(options = {})
-    #:type => nil is a hack not to give Messages as Notifications
-    notifs = MessageCenter::Notification.recipient(messageable).where(:type => nil).order("message_center_notifications.created_at DESC")
+    notifs = MessageCenter::Notification.recipient(messageable).order("message_center_items.created_at DESC")
     if options[:read] == false || options[:unread]
       notifs = notifs.unread
     end

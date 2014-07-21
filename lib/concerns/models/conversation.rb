@@ -14,7 +14,7 @@ module MessageCenter::Concerns::Models::Conversation
     before_validation :clean
 
     scope :participant, lambda {|participant|
-      where('message_center_notifications.type'=> MessageCenter::Message.name).
+      where('message_center_items.type'=> MessageCenter::Message.name).
           order("message_center_conversations.updated_at DESC").
           joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).uniq
     }
@@ -121,7 +121,7 @@ module MessageCenter::Concerns::Models::Conversation
   def add_participant(participant)
     messages.each do |message|
       MessageCenter::ReceiptBuilder.new({
-                                            :notification => message,
+                                            :item         => message,
                                             :receiver     => participant,
                                             :updated_at   => message.updated_at,
                                             :created_at   => message.created_at

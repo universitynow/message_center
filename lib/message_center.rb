@@ -3,6 +3,7 @@ module MessageCenter
   module Concerns
     module Models
       autoload :Conversation, 'concerns/models/conversation'
+      autoload :Item, 'concerns/models/item'
       autoload :Mailbox, 'concerns/models/mailbox'
       autoload :Message, 'concerns/models/message'
       autoload :Notification, 'concerns/models/notification'
