@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.string   "subject",    :default => ""
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.integer  "messages_count", default: 0
   end
 
   create_table "message_center_items", :force => true do |t|
@@ -67,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
     t.boolean  "trashed",                       :default => false
     t.boolean  "deleted",                       :default => false
     t.string   "mailbox_type",    :limit => 25
+    t.hstore   "properties",           default: {},    null: false
     t.datetime "created_at",                                       :null => false
     t.datetime "updated_at",                                       :null => false
   end

@@ -11,7 +11,7 @@ describe MessageCenter::Mailbox, :type => :model do
     @receipt4 = @entity2.reply_to_all(@receipt3,"Reply body 3")
     @message1 = @receipt1.notification
     @message4 = @receipt4.notification
-    @conversation = @message1.conversation
+    @conversation = @message1.conversation.reload
   end
 
   it "should return all conversations" do
@@ -22,10 +22,10 @@ describe MessageCenter::Mailbox, :type => :model do
     assert @entity1.mailbox.conversations
 
     expect(@entity1.mailbox.conversations.to_a.count).to eq(4)
-        expect(@entity1.mailbox.conversations.to_a.count(@conversation)).to eq(1)
-        expect(@entity1.mailbox.conversations.to_a.count(@conv2)).to eq(1)
-        expect(@entity1.mailbox.conversations.to_a.count(@conv3)).to eq(1)
-        expect(@entity1.mailbox.conversations.to_a.count(@conv4)).to eq(1)
+    expect(@entity1.mailbox.conversations.to_a.count(@conversation)).to eq(1)
+    expect(@entity1.mailbox.conversations.to_a.count(@conv2)).to eq(1)
+    expect(@entity1.mailbox.conversations.to_a.count(@conv3)).to eq(1)
+    expect(@entity1.mailbox.conversations.to_a.count(@conv4)).to eq(1)
   end
 
   it "should return all mail" do
@@ -47,13 +47,13 @@ describe MessageCenter::Mailbox, :type => :model do
   it "should return sentbox" do
     assert @entity1.mailbox.receipts.inbox
     expect(@entity1.mailbox.receipts.sentbox.count).to eq(2)
-    expect(@entity1.mailbox.receipts.sentbox[0]).to eq(@receipt1)
-    expect(@entity1.mailbox.receipts.sentbox[1]).to eq(@receipt3)
+    expect(@entity1.mailbox.receipts.sentbox[0]).to eq(@receipt3)
+    expect(@entity1.mailbox.receipts.sentbox[1]).to eq(@receipt1)
 
     assert @entity2.mailbox.receipts.inbox
     expect(@entity2.mailbox.receipts.sentbox.count).to eq(2)
-    expect(@entity2.mailbox.receipts.sentbox[0]).to eq(@receipt2)
-    expect(@entity2.mailbox.receipts.sentbox[1]).to eq(@receipt4)
+    expect(@entity2.mailbox.receipts.sentbox[0]).to eq(@receipt4)
+    expect(@entity2.mailbox.receipts.sentbox[1]).to eq(@receipt2)
   end
 
   it "should return inbox" do
@@ -116,8 +116,8 @@ describe MessageCenter::Mailbox, :type => :model do
   it "should deleted messages are not shown in sentbox" do
     assert @entity1.mailbox.receipts.inbox
     expect(@entity1.mailbox.receipts.sentbox.count).to eq(2)
-    expect(@entity1.mailbox.receipts.sentbox[0]).to eq(@receipt1)
-    expect(@entity1.mailbox.receipts.sentbox[1]).to eq(@receipt3)
+    expect(@entity1.mailbox.receipts.sentbox[0]).to eq(@receipt3)
+    expect(@entity1.mailbox.receipts.sentbox[1]).to eq(@receipt1)
 
     assert @entity1.mailbox.receipts.sentbox.mark_as_deleted
     expect(@entity1.mailbox.sentbox.count).to eq(0)

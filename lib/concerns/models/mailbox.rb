@@ -68,7 +68,7 @@ module MessageCenter::Concerns::Models::Mailbox
 
   #Returns all the receipts of messageable, from Messages and Notifications
   def receipts(options = {})
-    MessageCenter::Receipt.where(options).recipient(messageable)
+    MessageCenter::Receipt.where(options).recipient(messageable).order(:created_at => :desc)
   end
 
   #Deletes all the messages in the trash of messageable. NOT IMPLEMENTED.

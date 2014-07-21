@@ -10,7 +10,7 @@ describe MessageCenter::Conversation, :type => :model do
   let!(:receipt4) { entity2.reply_to_all(receipt3,"Reply body 3") }
   let!(:message1) { receipt1.notification }
   let!(:message4) { receipt4.notification }
-  let!(:conversation) { message1.conversation }
+  let!(:conversation) { message1.conversation.reload }
 
   it { is_expected.to validate_presence_of :subject }
   it { is_expected.to ensure_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }

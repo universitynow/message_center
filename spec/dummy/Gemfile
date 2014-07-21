@@ -4,8 +4,4 @@ gem 'rails', '~> 4.1.0'
 gem 'message_center', :path => '../../'
 gem 'factory_girl'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-gem "sqlite3", :platform => [:ruby, :mswin, :mingw]
-gem "jdbc-sqlite3", :platform => :jruby
+gem "pg"
