@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131206080416) do
+ActiveRecord::Schema.define(:version => 20140723145103) do
 
   create_table "message_center_conversation_opt_outs", :force => true do |t|
     t.integer "unsubscriber_id"

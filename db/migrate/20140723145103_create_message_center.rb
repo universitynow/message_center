@@ -35,7 +35,11 @@ class CreateMessageCenter < ActiveRecord::Migration
       t.column :created_at, :datetime, :null => false
       t.boolean :global, default: false
       t.datetime :expires
-    end    
+    end
+    create_table :message_center_conversation_opt_outs do |t|
+      t.integer :unsubscriber_id
+      t.references :conversation
+    end
 
   #Indexes
    #Conversations
@@ -51,16 +55,19 @@ class CreateMessageCenter < ActiveRecord::Migration
     add_foreign_key "message_center_receipts", "message_center_items", :name => "receipts_on_item_id", :column => "item_id"
     #Messages
     add_foreign_key "message_center_items", "message_center_conversations", :name => "items_on_conversation_id", :column => "conversation_id"
+    add_foreign_key "message_center_conversation_opt_outs", "message_center_conversations", :name => "mb_opt_outs_on_conversations_id", :column => "conversation_id"
   end
 
   def self.down
   #Tables
     remove_foreign_key "message_center_receipts", :name => "receipts_on_item_id"
     remove_foreign_key "message_center_items", :name => "items_on_conversation_id"
+    remove_foreign_key "message_center_conversation_opt_outs", :name => "mb_opt_outs_on_conversations_id"
 
   #Indexes
     drop_table :message_center_receipts
     drop_table :message_center_conversations
     drop_table :message_center_items
+    drop_table :message_center_conversation_opt_outs
   end
 end
