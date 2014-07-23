@@ -58,11 +58,11 @@ module MessageCenter
       #Sends a messages, starting a new conversation, with the messageable
       #as originator
       def send_message(recipients, msg_body, subject, sanitize_text=true, attachment=nil, message_timestamp = Time.now)
-        convo = MessageCenter::ConversationBuilder.new({
+        convo = MessageCenter::Conversation.create(
           :subject    => subject,
           :created_at => message_timestamp,
           :updated_at => message_timestamp
-        }).build
+        )
 
         message = MessageCenter::MessageBuilder.new({
           :sender       => self,
