@@ -150,12 +150,12 @@ module MessageCenter::Concerns::Models::Item
   private
 
   def build_receipt(receiver, mailbox_type, is_read = false)
-    MessageCenter::ReceiptBuilder.new({
+    MessageCenter::Receipt.new(
       :item         => self,
-      :mailbox_type => mailbox_type,
+      :mailbox_type => mailbox_type || 'inbox',
       :receiver     => receiver,
       :is_read      => is_read
-    }).build
+    )
   end
 
 end
