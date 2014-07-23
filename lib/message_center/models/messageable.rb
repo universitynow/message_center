@@ -64,7 +64,7 @@ module MessageCenter
           :updated_at => message_timestamp
         )
 
-        message = MessageCenter::MessageBuilder.new({
+        message = MessageCenter::Message.new(
           :sender       => self,
           :conversation => convo,
           :recipients   => recipients,
@@ -73,7 +73,7 @@ module MessageCenter
           :attachment   => attachment,
           :created_at   => message_timestamp,
           :updated_at   => message_timestamp
-        }).build
+        )
 
         message.deliver false, sanitize_text
       end
@@ -82,14 +82,14 @@ module MessageCenter
       #Use reply_to_sender, reply_to_all and reply_to_conversation instead.
       def reply(conversation, recipients, reply_body, subject=nil, sanitize_text=true, attachment=nil)
         subject = subject || "#{conversation.subject}"
-        response = MessageCenter::MessageBuilder.new({
+        response = MessageCenter::Message.new(
           :sender       => self,
           :conversation => conversation,
           :recipients   => recipients,
           :body         => reply_body,
           :subject      => subject,
           :attachment   => attachment
-        }).build
+        )
 
         response.recipients.delete(self)
         response.deliver true, sanitize_text
