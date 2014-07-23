@@ -132,12 +132,12 @@ module MessageCenter::Concerns::Models::Conversation
   #Adds a new participant to the conversation
   def add_participant(participant)
     messages.each do |message|
-      MessageCenter::ReceiptBuilder.new({
+      MessageCenter::Receipt.create(
                                             :item         => message,
                                             :receiver     => participant,
                                             :updated_at   => message.updated_at,
                                             :created_at   => message.created_at
-                                        }).build.save
+                                        )
     end
   end
 
