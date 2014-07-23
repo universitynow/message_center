@@ -42,29 +42,15 @@ class CreateMessageCenter < ActiveRecord::Migration
     end
 
   #Indexes
-   #Conversations
     #Receipts
-    add_index "message_center_receipts","item_id"
+    add_index :message_center_receipts, [:item_id]
+    add_index :message_center_receipts, [:receiver_id, :mailbox_type]
+    add_index :message_center_items, [:conversation_id]
 
-    #Messages
-    add_index "message_center_items","conversation_id"
-
-  #Foreign keys
-    #Conversations
-    #Receipts
-    add_foreign_key "message_center_receipts", "message_center_items", :name => "receipts_on_item_id", :column => "item_id"
-    #Messages
-    add_foreign_key "message_center_items", "message_center_conversations", :name => "items_on_conversation_id", :column => "conversation_id"
-    add_foreign_key "message_center_conversation_opt_outs", "message_center_conversations", :name => "mb_opt_outs_on_conversations_id", :column => "conversation_id"
   end
 
   def self.down
   #Tables
-    remove_foreign_key "message_center_receipts", :name => "receipts_on_item_id"
-    remove_foreign_key "message_center_items", :name => "items_on_conversation_id"
-    remove_foreign_key "message_center_conversation_opt_outs", :name => "mb_opt_outs_on_conversations_id"
-
-  #Indexes
     drop_table :message_center_receipts
     drop_table :message_center_conversations
     drop_table :message_center_items
