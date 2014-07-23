@@ -13,20 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20131206080416) do
 
-  create_table "cylons", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "ducks", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "message_center_conversation_opt_outs", :force => true do |t|
     t.integer "unsubscriber_id"
     t.string  "unsubscriber_type"
@@ -78,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20131206080416) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
+    t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

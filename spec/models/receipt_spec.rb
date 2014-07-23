@@ -41,16 +41,4 @@ describe MessageCenter::Receipt, :type => :model do
     expect(@mail1.deleted).to eq(false)
   end
 
-  context "STI models" do
-    before do
-      @entity3 = FactoryGirl.create(:user)
-      @entity4 = FactoryGirl.create(:user)
-      @mail2 = @entity3.send_message(@entity4, "Body", "Subject")
-    end
-	
-    it "should refer to the correct base class" do
-      expect(@mail2.receiver_type).to eq(@entity3.class.base_class.to_s)
-    end
-  end
-  
 end

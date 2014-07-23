@@ -1,7 +1,7 @@
 class AddConversationOptout < ActiveRecord::Migration
   def self.up
     create_table :message_center_conversation_opt_outs do |t|
-      t.references :unsubscriber, :polymorphic => true
+      t.integer :unsubscriber_id, :null => false
       t.references :conversation
     end
     add_foreign_key "message_center_conversation_opt_outs", "message_center_conversations", :name => "mb_opt_outs_on_conversations_id", :column => "conversation_id"

@@ -10,7 +10,7 @@ class CreateMessageCenter < ActiveRecord::Migration
     end    
     #Receipts
     create_table :message_center_receipts do |t|
-      t.references :receiver, :polymorphic => true
+      t.column :receiver_id, :integer, :null => false
       t.column :item_id, :integer, :null => false
       t.column :is_read, :boolean, :default => false
       t.column :trashed, :boolean, :default => false
@@ -25,7 +25,7 @@ class CreateMessageCenter < ActiveRecord::Migration
       t.column :type, :string
       t.column :body, :text
       t.column :subject, :string, :default => ""
-      t.references :sender, :polymorphic => true
+      t.column :sender_id, :integer
       t.column :conversation_id, :integer
       t.column :draft, :boolean, :default => false
       t.string :notification_code, :default => nil

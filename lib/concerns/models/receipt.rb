@@ -9,14 +9,12 @@ module MessageCenter::Concerns::Models::Receipt
     belongs_to :item, :class_name => "MessageCenter::Item", :validate => true, :autosave => true
     # TODO: for backwards compatibility - possibly remove :notification and :message or alias them both
     alias_method :notification, :item
-    belongs_to :receiver, :polymorphic => :true
+    belongs_to :receiver, :class_name => MessageCenter.messageable_class
     belongs_to :message, :class_name => "MessageCenter::Message", :foreign_key => "item_id"
 
     validates_presence_of :receiver
 
-    scope :recipient, lambda { |recipient|
-      where(:receiver_id => recipient.id,:receiver_type => recipient.class.base_class.to_s)
-    }
+    scope :recipient, lambda { |recipient| where(:receiver => recipient) }
     scope :notifications_receipts, lambda { joins(:item).where('message_center_items.type' => 'MessageCenter::Notification') }
     scope :messages_receipts, lambda { joins(:item).where('message_center_items.type' => 'MessageCenter::Message') }
     scope :notification, lambda { |item|
