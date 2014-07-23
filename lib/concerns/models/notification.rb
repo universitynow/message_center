@@ -12,13 +12,13 @@ module MessageCenter::Concerns::Models::Notification
   module ClassMethods
     #Sends a Notification to all the recipients
     def notify_all(recipients, subject, body, obj = nil, sanitize_text = true, notification_code=nil, send_mail=true)
-      notification = MessageCenter::NotificationBuilder.new({
+      notification = MessageCenter::Notification.new(
         :recipients        => recipients,
         :subject           => subject,
         :body              => body,
         :notified_object   => obj,
         :notification_code => notification_code
-      }).build
+      )
 
       notification.deliver sanitize_text, send_mail
     end
