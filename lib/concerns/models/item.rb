@@ -5,7 +5,7 @@ module MessageCenter::Concerns::Models::Item
     attr_writer :recipients
     attr_accessible :body, :subject, :global, :expires if MessageCenter.protected_attributes?
 
-    belongs_to :sender, :polymorphic => :true
+    belongs_to :sender, :class_name => MessageCenter.messageable_class
     has_many :receipts, :dependent => :destroy, :class_name => "MessageCenter::Receipt"
 
     validates :subject, :presence => true,
@@ -14,7 +14,7 @@ module MessageCenter::Concerns::Models::Item
                         :length => { :maximum => MessageCenter.body_max_length }
 
     scope :recipient, lambda { |recipient|
-      joins(:receipts).where('message_center_receipts.receiver_id' => recipient.id,'message_center_receipts.receiver_type' => recipient.class.base_class.to_s)
+      joins(:receipts).merge(MessageCenter::Receipt.recipient(recipient))
     }
     scope :not_trashed, lambda {
       joins(:receipts).where('message_center_receipts.trashed' => false)

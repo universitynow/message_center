@@ -1,5 +1,4 @@
-class Cylon < ActiveRecord::Base
-  acts_as_messageable
+class Cylon < User
   def mailboxer_email(object)
     return nil
   end

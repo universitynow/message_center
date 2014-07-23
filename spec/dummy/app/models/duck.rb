@@ -1,5 +1,4 @@
-class Duck < ActiveRecord::Base
-  acts_as_messageable
+class Duck < User
   def mailboxer_email(object)
     case object
     when MessageCenter::Message

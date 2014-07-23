@@ -9,75 +9,64 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131206080416) do
+ActiveRecord::Schema.define(version: 20140723145103) do
 
-  create_table "cylons", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "hstore"
 
-  create_table "ducks", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "message_center_conversation_opt_outs", :force => true do |t|
+  create_table "message_center_conversation_opt_outs", force: true do |t|
     t.integer "unsubscriber_id"
-    t.string  "unsubscriber_type"
     t.integer "conversation_id"
   end
 
-  create_table "message_center_conversations", :force => true do |t|
-    t.string   "subject",    :default => ""
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+  create_table "message_center_conversations", force: true do |t|
+    t.string   "subject",        default: ""
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "messages_count", default: 0
   end
 
-  create_table "message_center_items", :force => true do |t|
+  create_table "message_center_items", force: true do |t|
     t.string   "type"
     t.text     "body"
-    t.string   "subject",              :default => ""
+    t.string   "subject",              default: ""
     t.integer  "sender_id"
-    t.string   "sender_type"
+    t.integer  "conversation_id"
+    t.boolean  "draft",                default: false
+    t.string   "notification_code"
     t.integer  "notified_object_id"
     t.string   "notified_object_type"
-    t.string   "notification_code"
-    t.integer  "conversation_id"
-    t.boolean  "draft",                :default => false
     t.string   "attachment"
-    t.datetime "updated_at",                              :null => false
-    t.datetime "created_at",                              :null => false
-    t.boolean  "global",               :default => false
+    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",                           null: false
+    t.boolean  "global",               default: false
     t.datetime "expires"
   end
 
-  add_index "message_center_items", ["conversation_id"], :name => "index_message_center_items_on_conversation_id"
+  add_index "message_center_items", ["conversation_id"], name: "index_message_center_items_on_conversation_id", using: :btree
 
-  create_table "message_center_receipts", :force => true do |t|
-    t.integer  "receiver_id"
-    t.string   "receiver_type"
-    t.integer  "item_id",                                  :null => false
-    t.boolean  "is_read",                       :default => false
-    t.boolean  "trashed",                       :default => false
-    t.boolean  "deleted",                       :default => false
-    t.string   "mailbox_type",    :limit => 25
-    t.hstore   "properties",           default: {},    null: false
-    t.datetime "created_at",                                       :null => false
-    t.datetime "updated_at",                                       :null => false
+  create_table "message_center_receipts", force: true do |t|
+    t.integer  "receiver_id",                             null: false
+    t.integer  "item_id",                                 null: false
+    t.boolean  "is_read",                 default: false
+    t.boolean  "trashed",                 default: false
+    t.boolean  "deleted",                 default: false
+    t.string   "mailbox_type", limit: 25
+    t.hstore   "properties",              default: {},    null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
-  add_index "message_center_receipts", ["item_id"], :name => "index_message_center_receipts_on_item_id"
+  add_index "message_center_receipts", ["item_id"], name: "index_message_center_receipts_on_item_id", using: :btree
+  add_index "message_center_receipts", ["receiver_id", "mailbox_type"], name: "index_message_center_receipts_on_receiver_id_and_mailbox_type", using: :btree
 
-  create_table "users", :force => true do |t|
+  create_table "users", force: true do |t|
     t.string   "name"
     t.string   "email"
+    t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

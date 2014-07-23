@@ -10,7 +10,7 @@ class CreateMessageCenter < ActiveRecord::Migration
     end    
     #Receipts
     create_table :message_center_receipts do |t|
-      t.references :receiver, :polymorphic => true
+      t.column :receiver_id, :integer, :null => false
       t.column :item_id, :integer, :null => false
       t.column :is_read, :boolean, :default => false
       t.column :trashed, :boolean, :default => false
@@ -25,7 +25,7 @@ class CreateMessageCenter < ActiveRecord::Migration
       t.column :type, :string
       t.column :body, :text
       t.column :subject, :string, :default => ""
-      t.references :sender, :polymorphic => true
+      t.column :sender_id, :integer
       t.column :conversation_id, :integer
       t.column :draft, :boolean, :default => false
       t.string :notification_code, :default => nil
@@ -35,32 +35,25 @@ class CreateMessageCenter < ActiveRecord::Migration
       t.column :created_at, :datetime, :null => false
       t.boolean :global, default: false
       t.datetime :expires
-    end    
+    end
+    create_table :message_center_conversation_opt_outs do |t|
+      t.integer :unsubscriber_id
+      t.references :conversation
+    end
 
   #Indexes
-   #Conversations
     #Receipts
-    add_index "message_center_receipts","item_id"
+    add_index :message_center_receipts, [:item_id]
+    add_index :message_center_receipts, [:receiver_id, :mailbox_type]
+    add_index :message_center_items, [:conversation_id]
 
-    #Messages
-    add_index "message_center_items","conversation_id"
-
-  #Foreign keys
-    #Conversations
-    #Receipts
-    add_foreign_key "message_center_receipts", "message_center_items", :name => "receipts_on_item_id", :column => "item_id"
-    #Messages
-    add_foreign_key "message_center_items", "message_center_conversations", :name => "items_on_conversation_id", :column => "conversation_id"
   end
 
   def self.down
   #Tables
-    remove_foreign_key "message_center_receipts", :name => "receipts_on_item_id"
-    remove_foreign_key "message_center_items", :name => "items_on_conversation_id"
-
-  #Indexes
     drop_table :message_center_receipts
     drop_table :message_center_conversations
     drop_table :message_center_items
+    drop_table :message_center_conversation_opt_outs
   end
 end

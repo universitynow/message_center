@@ -15,10 +15,10 @@ module MessageCenter
       included do
         has_many :messages, :class_name => "MessageCenter::Message", :as => :sender
         if Rails::VERSION::MAJOR == 4
-          has_many :receipts, -> { order 'created_at DESC' }, :class_name => "MessageCenter::Receipt", dependent: :destroy,     as: :receiver
+          has_many :receipts, -> { order 'created_at DESC' }, :class_name => "MessageCenter::Receipt", dependent: :destroy, foreign_key: 'receiver_id'
         else
           # Rails 3 does it this way
-          has_many :receipts, :order => 'created_at DESC',    :class_name => "MessageCenter::Receipt", :dependent => :destroy, :as => :receiver
+          has_many :receipts, :order => 'created_at DESC',    :class_name => "MessageCenter::Receipt", :dependent => :destroy, :foreign_key => 'receiver_id'
         end
       end
 

@@ -21,9 +21,6 @@ Gem::Specification.new do |s|
   # Postgres dependencies
   s.add_runtime_dependency('pg', '>= 0.17.1')
 
-  # SQL foreign keys
-  s.add_runtime_dependency('foreigner', '>= 0.9.1')
-
   # Specs
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency('appraisal', '~> 1.0.0')

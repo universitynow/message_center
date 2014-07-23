@@ -15,6 +15,8 @@ module MessageCenter
     autoload :Messageable, 'message_center/models/messageable'
   end
 
+  mattr_accessor :messageable_class
+  @@messageable_class = 'User'
   mattr_accessor :default_from
   @@default_from = "no-reply@message_center.com"
   mattr_accessor :uses_emails

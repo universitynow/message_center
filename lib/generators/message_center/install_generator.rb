@@ -18,7 +18,7 @@ class MessageCenter::InstallGenerator < Rails::Generators::Base #:nodoc:
 
   def copy_migrations
     if Rails.version < "3.1"
-      migrations = [["20110511145103_create_message_center.rb","create_message_center.rb"], ["20131206080416_add_conversation_optout.rb","add_conversation_optout.rb"]],
+      migrations = [["20140723145103_create_message_center.rb","create_message_center.rb"]]
       migrations.each do |migration|
         migration_template "../../../../db/migrate/" + migration[0], "db/migrate/" + migration[1]
       end
