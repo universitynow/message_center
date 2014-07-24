@@ -11,7 +11,6 @@ module MessageCenter
         end
       end
 
-
       included do
         has_many :messages, :class_name => 'MessageCenter::Message', :as => :sender
         if Rails::VERSION::MAJOR == 4
@@ -19,29 +18,6 @@ module MessageCenter
         else
           # Rails 3 does it this way
           has_many :receipts, :order => 'created_at DESC',    :class_name => 'MessageCenter::Receipt', :dependent => :destroy, :foreign_key => 'receiver_id'
-        end
-      end
-
-      unless defined?(MessageCenter.name_method)
-        # Returning any kind of identification you want for the model
-        define_method MessageCenter.name_method do
-          begin
-            super
-          rescue NameError
-            return "You should add method :#{MessageCenter.name_method} in your Messageable model"
-          end
-        end
-      end
-
-      unless defined?(MessageCenter.email_method)
-        #Returning the email address of the model if an email should be sent for this object (Message or Notification).
-        #If no mail has to be sent, return nil.
-        define_method MessageCenter.email_method do |object|
-          begin
-            super
-          rescue NameError
-            return "You should add method :#{MessageCenter.email_method} in your Messageable model"
-          end
         end
       end
 
