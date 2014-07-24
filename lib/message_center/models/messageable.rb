@@ -75,7 +75,7 @@ module MessageCenter
           :updated_at   => message_timestamp
         )
 
-        message.deliver false, sanitize_text
+        message.deliver(false, sanitize_text)
       end
 
       #Basic reply method. USE NOT RECOMENDED.
@@ -125,38 +125,20 @@ module MessageCenter
       #* A Notification
       #* A Conversation
       #* An array with any of them
-      def mark_as_read(obj)
+      def mark_as_read(obj, is_read=true)
         case obj
         when MessageCenter::Receipt
-          obj.mark_as_read if obj.receiver == self
-        when MessageCenter::Message, MessageCenter::Notification
-          obj.mark_as_read(self)
-        when MessageCenter::Conversation
-          obj.mark_as_read(self)
+          obj.mark_as_read(is_read) if obj.receiver == self
         when Array
-          obj.map{ |sub_obj| mark_as_read(sub_obj) }
+          obj.map{ |sub_obj| mark_as_read(sub_obj, is_read) }
+        else
+          obj.mark_as_read(self, is_read)
         end
       end
 
       #Mark the object as unread for messageable.
-      #
-      #Object can be:
-      #* A Receipt
-      #* A Message
-      #* A Notification
-      #* A Conversation
-      #* An array with any of them
       def mark_as_unread(obj)
-        case obj
-        when MessageCenter::Receipt
-          obj.mark_as_unread if obj.receiver == self
-        when MessageCenter::Message, MessageCenter::Notification
-          obj.mark_as_unread(self)
-        when MessageCenter::Conversation
-          obj.mark_as_unread(self)
-        when Array
-          obj.map{ |sub_obj| mark_as_unread(sub_obj) }
-        end
+        mark_as_read(obj, false)
       end
 
       #Mark the object as deleted for messageable.

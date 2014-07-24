@@ -94,15 +94,14 @@ module MessageCenter::Concerns::Models::Item
   end
 
   #Mark the notification as read
-  def mark_as_read(participant)
+  def mark_as_read(participant, is_read=true)
     return if participant.nil?
-    receipt_for(participant).mark_as_read
+    receipt_for(participant).mark_as_read(is_read)
   end
 
   #Mark the notification as unread
   def mark_as_unread(participant)
-    return if participant.nil?
-    receipt_for(participant).mark_as_unread
+    mark_as_read(participant, false)
   end
 
   #Move the notification to the trash

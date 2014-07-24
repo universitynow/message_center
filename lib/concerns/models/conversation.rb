@@ -36,15 +36,14 @@ module MessageCenter::Concerns::Models::Conversation
   end
 
   #Mark the conversation as read for one of the participants
-  def mark_as_read(participant)
+  def mark_as_read(participant, is_read=true)
     return unless participant
-    receipts_for(participant).mark_as_read
+    receipts_for(participant).mark_as_read(is_read)
   end
 
   #Mark the conversation as unread for one of the participants
   def mark_as_unread(participant)
-    return unless participant
-    receipts_for(participant).mark_as_unread
+    mark_as_read(participant, false)
   end
 
   #Mark the conversation as starred for one of the participants
