@@ -7,7 +7,7 @@ module MessageCenter::Concerns::Models::Receipt
     store_accessor :properties, :label, :starred
 
     belongs_to :item, :class_name => 'MessageCenter::Item', :validate => true, :autosave => true
-    # TODO: for backwards compatibility - possibly remove :notification and :message or alias them both
+    # alias for backwards compatibility
     alias_method :notification, :item
     belongs_to :message, :class_name => 'MessageCenter::Message', :foreign_key => 'item_id'
 
@@ -56,8 +56,8 @@ module MessageCenter::Concerns::Models::Receipt
     end
 
     #Marks all the receipts from the relation as trashed
-    def move_to_trash
-      update_all({:trashed => true})
+    def move_to_trash(trashed=true)
+      update_all({:trashed => trashed})
     end
 
     #Marks all the receipts from the relation as not trashed
@@ -108,13 +108,13 @@ module MessageCenter::Concerns::Models::Receipt
   end
 
   #Marks the receipt as trashed
-  def move_to_trash
-    update_attributes(:trashed => true)
+  def move_to_trash(trashed=true)
+    update_attributes(:trashed => trashed)
   end
 
   #Marks the receipt as not trashed
   def untrash
-    update_attributes(:trashed => false)
+    move_to_trash(false)
   end
 
   #Moves the receipt to inbox

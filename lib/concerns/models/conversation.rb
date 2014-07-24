@@ -59,15 +59,14 @@ module MessageCenter::Concerns::Models::Conversation
   end
 
   #Move the conversation to the trash for one of the participants
-  def move_to_trash(participant)
+  def move_to_trash(participant, trashed=true)
     return unless participant
-    receipts_for(participant).move_to_trash
+    receipts_for(participant).move_to_trash(trashed)
   end
 
   #Takes the conversation out of the trash for one of the participants
   def untrash(participant)
-    return unless participant
-    receipts_for(participant).untrash
+    move_to_trash(participant, false)
   end
 
   #Mark the conversation as deleted for one of the participants

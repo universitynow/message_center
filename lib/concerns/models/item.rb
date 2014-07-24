@@ -105,15 +105,14 @@ module MessageCenter::Concerns::Models::Item
   end
 
   #Move the notification to the trash
-  def move_to_trash(participant)
+  def move_to_trash(participant, trashed=true)
     return if participant.nil?
-    receipt_for(participant).move_to_trash
+    receipt_for(participant).move_to_trash(trashed)
   end
 
   #Takes the notification out of the trash
   def untrash(participant)
-    return if participant.nil?
-    receipt_for(participant).untrash
+    trash(participant, false)
   end
 
   #Mark the notification as deleted for one of the participant

@@ -151,16 +151,12 @@ module MessageCenter
       #* An array with any of them
       def mark_as_deleted(obj)
         case obj
-          when Receipt
-            return obj.mark_as_deleted if obj.receiver == self
-          when Message, Notification
-            obj.mark_as_deleted(self)
-          when Conversation
-            obj.mark_as_deleted(self)
-          when Array
-            obj.map{ |sub_obj| mark_as_deleted(sub_obj) }
-          else
-            return nil
+        when MessageCenter::Receipt
+          return obj.mark_as_deleted if obj.receiver == self
+        when Array
+          obj.map{ |sub_obj| mark_as_deleted(sub_obj) }
+        else
+          obj.mark_as_deleted(self)
         end
       end
 
@@ -172,16 +168,14 @@ module MessageCenter
       #* A Notification
       #* A Conversation
       #* An array with any of them
-      def trash(obj)
+      def trash(obj, trashed=true)
         case obj
         when MessageCenter::Receipt
-          obj.move_to_trash if obj.receiver == self
-        when MessageCenter::Message, MessageCenter::Notification
-          obj.move_to_trash(self)
-        when MessageCenter::Conversation
-          obj.move_to_trash(self)
+          obj.move_to_trash(trashed) if obj.receiver == self
         when Array
-          obj.map{ |sub_obj| trash(sub_obj) }
+          obj.map{ |sub_obj| trash(sub_obj, trashed) }
+        else
+          obj.move_to_trash(self, trashed)
         end
       end
 
@@ -194,16 +188,7 @@ module MessageCenter
       #* A Conversation
       #* An array with any of them
       def untrash(obj)
-        case obj
-        when MessageCenter::Receipt
-          obj.untrash if obj.receiver == self
-        when MessageCenter::Message, MessageCenter::Notification
-          obj.untrash(self)
-        when MessageCenter::Conversation
-          obj.untrash(self)
-        when Array
-          obj.map{ |sub_obj| untrash(sub_obj) }
-        end
+        trash(obj, false)
       end
 
       def search_messages(query)
