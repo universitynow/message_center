@@ -1,7 +1,6 @@
 module MessageCenter
   class Conversation
     class OptOut < ActiveRecord::Base
-      self.table_name = :message_center_conversation_opt_outs
 
       belongs_to :conversation, :class_name => "MessageCenter::Conversation"
       belongs_to :unsubscriber, :class_name => MessageCenter.messageable_class
