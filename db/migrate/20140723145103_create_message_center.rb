@@ -34,7 +34,7 @@ class CreateMessageCenter < ActiveRecord::Migration
       t.column :updated_at, :datetime, :null => false
       t.column :created_at, :datetime, :null => false
       t.boolean :global, default: false
-      t.datetime :expires
+      t.datetime :expires_at
     end
     create_table :message_center_conversation_opt_outs do |t|
       t.integer :unsubscriber_id

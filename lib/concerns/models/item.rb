@@ -3,7 +3,7 @@ module MessageCenter::Concerns::Models::Item
 
   included do
     attr_writer :recipients
-    attr_accessible :body, :subject, :global, :expires if MessageCenter.protected_attributes?
+    attr_accessible :body, :subject, :global, :expires_at if MessageCenter.protected_attributes?
 
     belongs_to :sender, :class_name => MessageCenter.messageable_class
     has_many :receipts, :dependent => :destroy, :class_name => 'MessageCenter::Receipt'
@@ -17,15 +17,15 @@ module MessageCenter::Concerns::Models::Item
     scope :not_trashed, lambda { joins(:receipts).merge(MessageCenter::Receipt.not_trash) }
     scope :unread, lambda { joins(:receipts).merge(MessageCenter::Receipt.is_unread) }
     scope :global, lambda { where(:global => true) }
-    scope :expired, lambda { where('message_center_items.expires < ?', Time.now) }
+    scope :expired, lambda { where('message_center_items.expires_at < ?', Time.now) }
     scope :unexpired, lambda {
-      where('message_center_items.expires is NULL OR message_center_items.expires > ?', Time.now)
+      where('message_center_items.expires_at is NULL OR message_center_items.expires_at > ?', Time.now)
     }
 
   end
 
   def expired?
-    expires.present? && (expires < Time.now)
+    expires_at.present? && (expires_at < Time.now)
   end
 
   def expire!
@@ -37,7 +37,7 @@ module MessageCenter::Concerns::Models::Item
 
   def expire
     unless expired?
-      self.expires = Time.now - 1.second
+      self.expires_at = Time.now - 1.second
     end
   end
 

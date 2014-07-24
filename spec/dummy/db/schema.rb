@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20140723145103) do
     t.datetime "updated_at",                           null: false
     t.datetime "created_at",                           null: false
     t.boolean  "global",               default: false
-    t.datetime "expires"
+    t.datetime "expires_at"
   end
 
   add_index "message_center_items", ["conversation_id"], name: "index_message_center_items_on_conversation_id", using: :btree

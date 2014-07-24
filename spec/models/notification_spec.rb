@@ -113,14 +113,14 @@ describe MessageCenter::Notification, :type => :model do
 
     describe ".expired" do
       it "finds expired notifications" do
-        notification.update_attributes(expires: 1.day.ago)
+        notification.update_attributes(expires_at: 1.day.ago)
         expect(scope_user.mailbox.notifications.expired.count).to eq(1)
       end
     end
 
     describe ".unexpired" do
       it "finds unexpired notifications" do
-        notification.update_attributes(expires: 1.day.from_now)
+        notification.update_attributes(expires_at: 1.day.from_now)
         expect(scope_user.mailbox.notifications.unexpired.count).to eq(1)
       end
     end
@@ -133,8 +133,8 @@ describe MessageCenter::Notification, :type => :model do
       before do
         allow(subject).to receive_messages(:expired? => true)
       end
-      it 'should not update the expires attribute' do
-        expect(subject).not_to receive :expires=
+      it 'should not update the expires_at attribute' do
+        expect(subject).not_to receive :expires_at=
         expect(subject).not_to receive :save
         subject.expire
       end
@@ -147,8 +147,8 @@ describe MessageCenter::Notification, :type => :model do
         allow(Time).to receive_messages(:now => now)
         allow(subject).to receive_messages(:expired? => false)
       end
-      it 'should update the expires attribute' do
-        expect(subject).to receive(:expires=).with(one_second_ago)
+      it 'should update the expires_at attribute' do
+        expect(subject).to receive(:expires_at=).with(one_second_ago)
         subject.expire
       end
       it 'should not save the record' do
@@ -195,7 +195,7 @@ describe MessageCenter::Notification, :type => :model do
   describe "#expired?" do
     subject { described_class.new }
     context "when the expiration date is in the past" do
-      before { allow(subject).to receive_messages(:expires => Time.now - 1.second) }
+      before { allow(subject).to receive_messages(:expires_at => Time.now - 1.second) }
       it 'should be expired' do
         expect(subject.expired?).to be_truthy
       end
@@ -205,7 +205,7 @@ describe MessageCenter::Notification, :type => :model do
       before {
         time = Time.now
         allow(Time).to receive_messages(:now => time)
-        allow(subject).to receive_messages(:expires => time)
+        allow(subject).to receive_messages(:expires_at => time)
       }
 
       it 'should not be expired' do
@@ -214,14 +214,14 @@ describe MessageCenter::Notification, :type => :model do
     end
 
     context "when the expiration date is in the future" do
-      before { allow(subject).to receive_messages(:expires => Time.now + 1.second) }
+      before { allow(subject).to receive_messages(:expires_at => Time.now + 1.second) }
       it 'should not be expired' do
         expect(subject.expired?).to be_falsey
       end
     end
 
     context "when the expiration date is not set" do
-      before {allow(subject).to receive_messages(:expires => nil)}
+      before {allow(subject).to receive_messages(:expires_at => nil)}
       it 'should not be expired' do
         expect(subject.expired?).to be_falsey
       end
