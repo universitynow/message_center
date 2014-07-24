@@ -1,4 +1,7 @@
-require 'carrierwave'
+begin
+  require 'carrierwave'
+rescue LoadError
+end
 begin
   require 'sunspot_rails'
 rescue LoadError

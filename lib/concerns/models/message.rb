@@ -13,7 +13,7 @@ module MessageCenter::Concerns::Models::Message
       where(:conversation_id => conversation.id)
     }
 
-    mount_uploader :attachment, AttachmentUploader
+    mount_uploader :attachment, AttachmentUploader if defined?(CarrierWave)
   end
 
   module ClassMethods
