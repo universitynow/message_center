@@ -115,11 +115,6 @@ module MessageCenter::Concerns::Models::Conversation
     MessageCenter::Receipt.conversation(self).recipient(participant)
   end
 
-  #Returns the number of messages of the conversation
-  def count_messages
-    MessageCenter::Message.conversation(self).count
-  end
-
   #Returns true if the messageable is a participant of the conversation
   def is_participant?(participant)
     return false unless participant
