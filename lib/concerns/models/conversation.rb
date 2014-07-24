@@ -2,7 +2,6 @@ module MessageCenter::Concerns::Models::Conversation
   extend ActiveSupport::Concern
 
   included do
-    attr_accessible :subject if MessageCenter.protected_attributes?
 
     has_many :opt_outs, :dependent => :destroy, :class_name => 'MessageCenter::Conversation::OptOut'
     has_many :messages, :dependent => :destroy, :class_name => 'MessageCenter::Message'

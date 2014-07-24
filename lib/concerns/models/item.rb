@@ -3,7 +3,6 @@ module MessageCenter::Concerns::Models::Item
 
   included do
     attr_writer :recipients
-    attr_accessible :body, :subject, :global, :expires_at if MessageCenter.protected_attributes?
 
     belongs_to :sender, :class_name => MessageCenter.messageable_class
     has_many :receipts, :dependent => :destroy, :class_name => 'MessageCenter::Receipt'

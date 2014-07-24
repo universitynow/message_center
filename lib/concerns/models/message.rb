@@ -2,7 +2,6 @@ module MessageCenter::Concerns::Models::Message
   extend ActiveSupport::Concern
 
   included do
-    attr_accessible :attachment if MessageCenter.protected_attributes?
 
     belongs_to :conversation, :class_name => 'MessageCenter::Conversation', :validate => true, :autosave => true, :counter_cache => true
     validates :sender, :presence => true

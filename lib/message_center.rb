@@ -43,10 +43,6 @@ module MessageCenter
     def setup
       yield self
     end
-
-    def protected_attributes?
-      Rails.version < '4' || defined?(ProtectedAttributes)
-    end
   end
 
 end

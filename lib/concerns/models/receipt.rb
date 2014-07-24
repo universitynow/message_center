@@ -2,7 +2,6 @@ module MessageCenter::Concerns::Models::Receipt
   extend ActiveSupport::Concern
 
   included do
-    attr_accessible :trashed, :is_read, :deleted if MessageCenter.protected_attributes?
 
     store_accessor :properties, :label, :starred
 
