@@ -46,8 +46,7 @@ module MessageCenter
   end
 
 end
-# reopen ActiveRecord and include all the above to make
-# them available to all our models if they want it
+
 require 'message_center/engine'
 require 'message_center/cleaner'
 require 'message_center/mail_dispatcher'

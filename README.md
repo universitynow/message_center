@@ -48,7 +48,10 @@ In your model:
 
 ```ruby
 class User < ActiveRecord::Base
-  acts_as_messageable
+  include MessageCenter::Models::Messagable
+  def message_center_email
+    email
+  end
 end
 ```
 
