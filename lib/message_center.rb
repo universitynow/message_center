@@ -18,7 +18,7 @@ module MessageCenter
   mattr_accessor :messageable_class
   @@messageable_class = 'User'
   mattr_accessor :default_from
-  @@default_from = "no-reply@message_center.com"
+  @@default_from = 'no-reply@message_center.com'
   mattr_accessor :uses_emails
   @@uses_emails = true
   mattr_accessor :mailer_wants_array

@@ -4,9 +4,9 @@ module MessageCenter::Concerns::Models::Conversation
   included do
     attr_accessible :subject if MessageCenter.protected_attributes?
 
-    has_many :opt_outs, :dependent => :destroy, :class_name => "MessageCenter::Conversation::OptOut"
-    has_many :messages, :dependent => :destroy, :class_name => "MessageCenter::Message"
-    has_many :receipts, :through => :messages,  :class_name => "MessageCenter::Receipt"
+    has_many :opt_outs, :dependent => :destroy, :class_name => 'MessageCenter::Conversation::OptOut'
+    has_many :messages, :dependent => :destroy, :class_name => 'MessageCenter::Message'
+    has_many :receipts, :through => :messages,  :class_name => 'MessageCenter::Receipt'
 
     validates :subject, :presence => true,
               :length => { :maximum => MessageCenter.subject_max_length }
@@ -15,7 +15,7 @@ module MessageCenter::Concerns::Models::Conversation
 
     scope :participant, lambda {|participant|
       where('message_center_items.type'=> MessageCenter::Message.name).
-          order("message_center_conversations.updated_at DESC").
+          order('message_center_conversations.updated_at DESC').
           joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).uniq
     }
     scope :inbox, lambda {|participant|
@@ -150,7 +150,7 @@ module MessageCenter::Concerns::Models::Conversation
   #Returns true if the participant has deleted the conversation
   def is_deleted?(participant)
     return false unless participant
-    return receipts_for(participant).deleted.count == receipts_for(participant).count
+    receipts_for(participant).deleted.count == receipts_for(participant).count
   end
 
   #Returns true if both participants have deleted the conversation

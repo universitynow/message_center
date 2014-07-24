@@ -6,10 +6,10 @@ module MessageCenter::Concerns::Models::Receipt
 
     store_accessor :properties, :label, :starred
 
-    belongs_to :item, :class_name => "MessageCenter::Item", :validate => true, :autosave => true
+    belongs_to :item, :class_name => 'MessageCenter::Item', :validate => true, :autosave => true
     # TODO: for backwards compatibility - possibly remove :notification and :message or alias them both
     alias_method :notification, :item
-    belongs_to :message, :class_name => "MessageCenter::Message", :foreign_key => "item_id"
+    belongs_to :message, :class_name => 'MessageCenter::Message', :foreign_key => 'item_id'
 
     belongs_to :receiver, :class_name => MessageCenter.messageable_class
     validates :receiver, :presence => true
@@ -21,8 +21,8 @@ module MessageCenter::Concerns::Models::Receipt
     scope :conversation, lambda { |conversation|
       joins(:message).where('message_center_items.conversation_id' => conversation.id)
     }
-    scope :sentbox, lambda { where(:mailbox_type => "sentbox") }
-    scope :inbox, lambda { where(:mailbox_type => "inbox") }
+    scope :sentbox, lambda { where(:mailbox_type => 'sentbox') }
+    scope :inbox, lambda { where(:mailbox_type => 'inbox') }
     scope :trash, lambda { where(:trashed => true, :deleted => false) }
     scope :not_trash, lambda { where(:trashed => false) }
     scope :deleted, lambda { where(:deleted => true) }
@@ -81,10 +81,10 @@ module MessageCenter::Concerns::Models::Receipt
     def update_receipts(updates,options={})
       ids = where(options).map { |rcp| rcp.id }
       unless ids.empty?
-        conditions = [""].concat(ids)
-        condition = "id = ? "
+        conditions = [''].concat(ids)
+        condition = 'id = ? '
         ids.drop(1).each do
-          condition << "OR id = ? "
+          condition << 'OR id = ? '
         end
         conditions[0] = condition
         MessageCenter::Receipt.except(:where).except(:joins).where(conditions).update_all(updates)
@@ -162,9 +162,9 @@ module MessageCenter::Concerns::Models::Receipt
   #Removes the duplicate error about not present subject from Conversation if it has been already
   #raised by Message
   def remove_duplicate_errors
-    if errors["message_center_item.conversation.subject"].present? and errors["message_center_item.subject"].present?
-      errors["message_center_item.conversation.subject"].each do |msg|
-        errors["message_center_item.conversation.subject"].delete(msg)
+    if errors['message_center_item.conversation.subject'].present? and errors['message_center_item.subject'].present?
+      errors['message_center_item.conversation.subject'].each do |msg|
+        errors['message_center_item.conversation.subject'].delete(msg)
       end
     end
   end

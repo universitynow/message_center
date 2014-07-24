@@ -10,7 +10,7 @@ MessageCenter.setup do |config|
   # config.mailer_wants_array = false
 
   #Configures the default from for emails sent for Messages and Notifications
-  config.default_from = "no-reply@yourdomain.com"
+  config.default_from = 'no-reply@yourdomain.com'
 
   #Configures the methods needed by message_center
   config.email_method = :message_center_email

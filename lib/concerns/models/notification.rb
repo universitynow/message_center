@@ -23,7 +23,7 @@ module MessageCenter::Concerns::Models::Notification
 
     #Takes a +Receipt+ or an +Array+ of them and returns +true+ if the delivery was
     #successful or +false+ if some error raised
-    def successful_delivery? receipts
+    def successful_delivery?(receipts)
       case receipts
       when MessageCenter::Receipt
         receipts.valid?

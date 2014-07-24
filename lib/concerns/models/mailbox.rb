@@ -12,7 +12,7 @@ module MessageCenter::Concerns::Models::Mailbox
 
   #Returns the notifications for the messageable
   def notifications(options = {})
-    notifs = MessageCenter::Notification.recipient(messageable).order("message_center_items.created_at DESC")
+    notifs = MessageCenter::Notification.recipient(messageable).order('message_center_items.created_at DESC')
     if options[:read] == false || options[:unread]
       notifs = notifs.unread
     end
@@ -72,7 +72,7 @@ module MessageCenter::Concerns::Models::Mailbox
   end
 
   #Deletes all the messages in the trash of messageable. NOT IMPLEMENTED.
-  def empty_trash(options = {})
+  def empty_trash(_options = {})
     #TODO
     false
   end

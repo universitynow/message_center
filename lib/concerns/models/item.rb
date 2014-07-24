@@ -6,7 +6,7 @@ module MessageCenter::Concerns::Models::Item
     attr_accessible :body, :subject, :global, :expires if MessageCenter.protected_attributes?
 
     belongs_to :sender, :class_name => MessageCenter.messageable_class
-    has_many :receipts, :dependent => :destroy, :class_name => "MessageCenter::Receipt"
+    has_many :receipts, :dependent => :destroy, :class_name => 'MessageCenter::Receipt'
 
     validates :subject, :presence => true,
                         :length => { :maximum => MessageCenter.subject_max_length }
@@ -17,9 +17,9 @@ module MessageCenter::Concerns::Models::Item
     scope :not_trashed, lambda { joins(:receipts).merge(MessageCenter::Receipt.not_trash) }
     scope :unread, lambda { joins(:receipts).merge(MessageCenter::Receipt.is_unread) }
     scope :global, lambda { where(:global => true) }
-    scope :expired, lambda { where("message_center_items.expires < ?", Time.now) }
+    scope :expired, lambda { where('message_center_items.expires < ?', Time.now) }
     scope :unexpired, lambda {
-      where("message_center_items.expires is NULL OR message_center_items.expires > ?", Time.now)
+      where('message_center_items.expires is NULL OR message_center_items.expires > ?', Time.now)
     }
 
   end
@@ -92,7 +92,7 @@ module MessageCenter::Concerns::Models::Item
   #Returns if the participant have deleted the Notification
   def is_deleted?(participant)
     return false if participant.nil?
-    return receipt_for(participant).first.deleted
+    receipt_for(participant).first.deleted
   end
 
   #Mark the notification as read
@@ -122,7 +122,7 @@ module MessageCenter::Concerns::Models::Item
   #Mark the notification as deleted for one of the participant
   def mark_as_deleted(participant)
     return if participant.nil?
-    return receipt_for(participant).mark_as_deleted
+    receipt_for(participant).mark_as_deleted
   end
 
   #Sanitizes the body and subject
