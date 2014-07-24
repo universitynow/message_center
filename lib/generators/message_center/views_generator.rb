@@ -3,7 +3,8 @@ class MessageCenter::ViewsGenerator < Rails::Generators::Base
 
   desc "Copy MessageCenter views into your app"
   def copy_views
-    directory('message_mailer', 'app/views/message_mailer')
-    directory('notification_mailer', 'app/views/notification_mailer')
+    directory('message_center/message_mailer', 'app/views/message_center/message_mailer')
+    directory('message_center/notification_mailer', 'app/views/message_center/notification_mailer')
   end
+
 end
