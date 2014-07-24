@@ -5,10 +5,10 @@ module MessageCenter::Concerns::Models::Receipt
 
     store_accessor :properties, :label, :starred
 
-    belongs_to :item, :class_name => 'MessageCenter::Item', :validate => true, :autosave => true
+    belongs_to :item, :validate => true, :autosave => true
     # alias for backwards compatibility
     alias_method :notification, :item
-    belongs_to :message, :class_name => 'MessageCenter::Message', :foreign_key => 'item_id'
+    belongs_to :message, :foreign_key => 'item_id'
 
     belongs_to :receiver, :class_name => MessageCenter.messageable_class
     validates :receiver, :presence => true

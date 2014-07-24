@@ -3,7 +3,7 @@ module MessageCenter::Concerns::Models::Message
 
   included do
 
-    belongs_to :conversation, :class_name => 'MessageCenter::Conversation', :validate => true, :autosave => true, :counter_cache => true
+    belongs_to :conversation, :validate => true, :autosave => true, :counter_cache => true
     validates :sender, :presence => true
 
     class_attribute :on_deliver_callback

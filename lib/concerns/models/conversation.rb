@@ -3,9 +3,9 @@ module MessageCenter::Concerns::Models::Conversation
 
   included do
 
-    has_many :opt_outs, :dependent => :destroy, :class_name => 'MessageCenter::Conversation::OptOut'
-    has_many :messages, :dependent => :destroy, :class_name => 'MessageCenter::Message'
-    has_many :receipts, :through => :messages,  :class_name => 'MessageCenter::Receipt'
+    has_many :opt_outs, :dependent => :destroy
+    has_many :messages, :dependent => :destroy
+    has_many :receipts, :through => :messages
 
     validates :subject, :presence => true,
               :length => { :maximum => MessageCenter.subject_max_length }

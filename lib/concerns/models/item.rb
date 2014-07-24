@@ -5,7 +5,7 @@ module MessageCenter::Concerns::Models::Item
     attr_writer :recipients
 
     belongs_to :sender, :class_name => MessageCenter.messageable_class
-    has_many :receipts, :dependent => :destroy, :class_name => 'MessageCenter::Receipt'
+    has_many :receipts, :dependent => :destroy
 
     validates :subject, :presence => true,
                         :length => { :maximum => MessageCenter.subject_max_length }
