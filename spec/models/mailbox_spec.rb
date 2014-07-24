@@ -29,19 +29,23 @@ describe MessageCenter::Mailbox, :type => :model do
   end
 
   it "should return all mail" do
-    assert @entity1.mailbox.receipts
-    expect(@entity1.mailbox.receipts.count).to eq(4)
-    expect(@entity1.mailbox.receipts[0]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[0])
-    expect(@entity1.mailbox.receipts[1]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[1])
-    expect(@entity1.mailbox.receipts[2]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[2])
-    expect(@entity1.mailbox.receipts[3]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[3])
+    entity1_mailbox_receipts = @entity1.mailbox.receipts.order(:created_at => :desc,:id => :desc)
+    entity2_mailbox_receipts = @entity2.mailbox.receipts.order(:created_at => :desc,:id => :desc)
+    entity1_receipts_by_conversation = MessageCenter::Receipt.recipient(@entity1).conversation(@conversation).order(:created_at => :desc,:id => :desc)
+    entity2_receipts_by_conversation = MessageCenter::Receipt.recipient(@entity2).conversation(@conversation).order(:created_at => :desc,:id => :desc)
+    assert entity1_mailbox_receipts
+    expect(entity1_mailbox_receipts.count).to eq(4)
+    expect(entity1_mailbox_receipts[0]).to eq(entity1_receipts_by_conversation[0])
+    expect(entity1_mailbox_receipts[1]).to eq(entity1_receipts_by_conversation[1])
+    expect(entity1_mailbox_receipts[2]).to eq(entity1_receipts_by_conversation[2])
+    expect(entity1_mailbox_receipts[3]).to eq(entity1_receipts_by_conversation[3])
 
-    assert @entity2.mailbox.receipts
-    expect(@entity2.mailbox.receipts.count).to eq(4)
-    expect(@entity2.mailbox.receipts[0]).to eq(MessageCenter::Receipt.recipient(@entity2).conversation(@conversation)[0])
-    expect(@entity2.mailbox.receipts[1]).to eq(MessageCenter::Receipt.recipient(@entity2).conversation(@conversation)[1])
-    expect(@entity2.mailbox.receipts[2]).to eq(MessageCenter::Receipt.recipient(@entity2).conversation(@conversation)[2])
-    expect(@entity2.mailbox.receipts[3]).to eq(MessageCenter::Receipt.recipient(@entity2).conversation(@conversation)[3])
+    assert entity2_mailbox_receipts
+    expect(entity2_mailbox_receipts.count).to eq(4)
+    expect(entity2_mailbox_receipts[0]).to eq(entity2_receipts_by_conversation[0])
+    expect(entity2_mailbox_receipts[1]).to eq(entity2_receipts_by_conversation[1])
+    expect(entity2_mailbox_receipts[2]).to eq(entity2_receipts_by_conversation[2])
+    expect(entity2_mailbox_receipts[3]).to eq(entity2_receipts_by_conversation[3])
   end
 
   it "should return sentbox" do
@@ -77,12 +81,15 @@ describe MessageCenter::Mailbox, :type => :model do
   it "should return trashed mails" do
     @entity1.mailbox.receipts.move_to_trash
 
-    assert @entity1.mailbox.receipts.trash
-    expect(@entity1.mailbox.receipts.trash.count).to eq(4)
-    expect(@entity1.mailbox.receipts.trash[0]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[0])
-    expect(@entity1.mailbox.receipts.trash[1]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[1])
-    expect(@entity1.mailbox.receipts.trash[2]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[2])
-    expect(@entity1.mailbox.receipts.trash[3]).to eq(MessageCenter::Receipt.recipient(@entity1).conversation(@conversation)[3])
+    entity1_trash_receipts = @entity1.mailbox.receipts.trash.order(:created_at => :desc,:id => :desc)
+    entity1_receipts_by_conversation = MessageCenter::Receipt.recipient(@entity1).conversation(@conversation).order(:created_at => :desc,:id => :desc)
+
+    assert entity1_trash_receipts
+    expect(entity1_trash_receipts.count).to eq(4)
+    expect(entity1_trash_receipts[0]).to eq(entity1_receipts_by_conversation[0])
+    expect(entity1_trash_receipts[1]).to eq(entity1_receipts_by_conversation[1])
+    expect(entity1_trash_receipts[2]).to eq(entity1_receipts_by_conversation[2])
+    expect(entity1_trash_receipts[3]).to eq(entity1_receipts_by_conversation[3])
 
     assert @entity2.mailbox.receipts.trash
     expect(@entity2.mailbox.receipts.trash.count).to eq(0)
