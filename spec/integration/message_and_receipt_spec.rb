@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Messages And Mailboxer::Receipts", :type => :request do
+describe "Messages And MessageCenter::Receipts", :type => :request do
 
   describe "two equal entities" do
     before do

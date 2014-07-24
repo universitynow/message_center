@@ -11,7 +11,7 @@ class MessageCenter::NotificationMailer < MessageCenter::BaseMailer
     @receiver     = receiver
     set_subject(notification)
     mail :to => receiver.send(MessageCenter.email_method, notification),
-         :subject => t('mailboxer.notification_mailer.subject', :subject => @subject),
+         :subject => t('message_center.notification_mailer.subject', :subject => @subject),
          :template_name => 'new_notification_email'
   end
 end

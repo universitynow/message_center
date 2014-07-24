@@ -48,7 +48,7 @@ module MessageCenter::Concerns::Models::Item
   end
 
   #Delivers a Notification. USE NOT RECOMENDED.
-  #Use Mailboxer::Models::Message.notify and Notification.notify_all instead.
+  #Use MessageCenter::Models::Message.notify and Notification.notify_all instead.
   def deliver(should_clean = true, send_mail = true)
     clean if should_clean
     temp_receipts = recipients.map { |r| build_receipt(r, nil, false) }

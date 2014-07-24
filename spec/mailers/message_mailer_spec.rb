@@ -70,11 +70,11 @@ describe MessageCenter::MessageMailer, :type => :mailer do
       default template_path: 'message_center/message_mailer'
 
       def new_message_email(message, receivers)
-        receivers.each { |receiver| super(message, receiver) if receiver.mailboxer_email(message).present? }
+        receivers.each { |receiver| super(message, receiver) if receiver.message_center_email(message).present? }
       end
 
       def reply_message_email(message, receivers)
-        receivers.each { |receiver| super(message, receiver) if receiver.mailboxer_email(message).present? }
+        receivers.each { |receiver| super(message, receiver) if receiver.message_center_email(message).present? }
       end
     end
 

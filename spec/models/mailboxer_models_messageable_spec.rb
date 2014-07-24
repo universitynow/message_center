@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Mailboxer::Models::Messageable through User", :type => :model do
+describe "MessageCenter::Models::Messageable through User", :type => :model do
 
   before do
     @entity1 = FactoryGirl.create(:user)
@@ -27,14 +27,14 @@ describe "Mailboxer::Models::Messageable through User", :type => :model do
 
 
 
-  it "should be able to unread an owned Mailboxer::Receipt (mark as unread)" do
+  it "should be able to unread an owned MessageCenter::Receipt (mark as unread)" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.is_read).to eq(true)
     @entity1.mark_as_unread(@receipt)
     expect(@receipt.is_read).to eq(false)
   end
 
-  it "should be able to read an owned Mailboxer::Receipt (mark as read)" do
+  it "should be able to read an owned MessageCenter::Receipt (mark as read)" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.is_read).to eq(true)
     @entity1.mark_as_unread(@receipt)
@@ -42,14 +42,14 @@ describe "Mailboxer::Models::Messageable through User", :type => :model do
     expect(@receipt.is_read).to eq(true)
   end
 
-  it "should not be able to unread a not owned Mailboxer::Receipt (mark as unread)" do
+  it "should not be able to unread a not owned MessageCenter::Receipt (mark as unread)" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.is_read).to eq(true)
     @entity2.mark_as_unread(@receipt) #Should not change
     expect(@receipt.is_read).to eq(true)
   end
 
-  it "should not be able to read a not owned Mailboxer::Receipt (mark as read)" do
+  it "should not be able to read a not owned MessageCenter::Receipt (mark as read)" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.is_read).to eq(true)
     @entity1.mark_as_unread(@receipt) #From read to unread
@@ -57,14 +57,14 @@ describe "Mailboxer::Models::Messageable through User", :type => :model do
     expect(@receipt.is_read).to eq(false)
   end
 
-  it "should be able to trash an owned Mailboxer::Receipt" do
+  it "should be able to trash an owned MessageCenter::Receipt" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.trashed).to eq(false)
     @entity1.trash(@receipt)
     expect(@receipt.trashed).to eq(true)
   end
 
-  it "should be able to untrash an owned Mailboxer::Receipt" do
+  it "should be able to untrash an owned MessageCenter::Receipt" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.trashed).to eq(false)
     @entity1.trash(@receipt)
@@ -72,14 +72,14 @@ describe "Mailboxer::Models::Messageable through User", :type => :model do
     expect(@receipt.trashed).to eq(false)
   end
 
-  it "should not be able to trash a not owned Mailboxer::Receipt" do
+  it "should not be able to trash a not owned MessageCenter::Receipt" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.trashed).to eq(false)
     @entity2.trash(@receipt) #Should not change
     expect(@receipt.trashed).to eq(false)
   end
 
-  it "should not be able to untrash a not owned Mailboxer::Receipt" do
+  it "should not be able to untrash a not owned MessageCenter::Receipt" do
     @receipt = @entity1.send_message(@entity2,"Body","Subject")
     expect(@receipt.trashed).to eq(false)
     @entity1.trash(@receipt) #From read to unread

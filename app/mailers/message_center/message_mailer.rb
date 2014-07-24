@@ -16,7 +16,7 @@ class MessageCenter::MessageMailer < MessageCenter::BaseMailer
     @receiver = receiver
     set_subject(message)
     mail :to => receiver.send(MessageCenter.email_method, message),
-         :subject => t('mailboxer.message_mailer.subject_new', :subject => @subject),
+         :subject => t('message_center.message_mailer.subject_new', :subject => @subject),
          :template_name => 'new_message_email'
   end
 
@@ -26,7 +26,7 @@ class MessageCenter::MessageMailer < MessageCenter::BaseMailer
     @receiver = receiver
     set_subject(message)
     mail :to => receiver.send(MessageCenter.email_method, message),
-         :subject => t('mailboxer.message_mailer.subject_reply', :subject => @subject),
+         :subject => t('message_center.message_mailer.subject_reply', :subject => @subject),
          :template_name => 'reply_message_email'
   end
 end

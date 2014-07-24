@@ -28,7 +28,7 @@ module MessageCenter
   mattr_accessor :search_engine
   @@search_engine = :solr
   mattr_accessor :email_method
-  @@email_method = :mailboxer_email
+  @@email_method = :message_center_email
   mattr_accessor :name_method
   @@name_method = :name
   mattr_accessor :subject_max_length

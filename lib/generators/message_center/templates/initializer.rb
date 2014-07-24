@@ -12,8 +12,8 @@ MessageCenter.setup do |config|
   #Configures the default from for emails sent for Messages and Notifications
   config.default_from = "no-reply@yourdomain.com"
 
-  #Configures the methods needed by mailboxer
-  config.email_method = :mailboxer_email
+  #Configures the methods needed by message_center
+  config.email_method = :message_center_email
   config.name_method = :name
 
   #Configures custom implementation of notification and message mailers

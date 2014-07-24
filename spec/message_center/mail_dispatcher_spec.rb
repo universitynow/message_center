@@ -5,8 +5,8 @@ describe MessageCenter::MailDispatcher do
   subject(:instance) { described_class.new(mailable, recipients) }
 
   let(:mailable)   { MessageCenter::Notification.new }
-  let(:recipient1) { double 'recipient1', mailboxer_email: ''  }
-  let(:recipient2) { double 'recipient2', mailboxer_email: 'foo@bar.com'  }
+  let(:recipient1) { double 'recipient1', message_center_email: ''  }
+  let(:recipient2) { double 'recipient2', message_center_email: 'foo@bar.com'  }
   let(:recipients) { [ recipient1, recipient2 ] }
 
   describe "call" do
