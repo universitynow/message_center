@@ -4,9 +4,7 @@ module MessageCenter::Concerns::Models::Notification
   included do
     belongs_to :notified_object, :polymorphic => :true
 
-    scope :with_object, lambda { |obj|
-      where('notified_object_id' => obj.id,'notified_object_type' => obj.class.to_s)
-    }
+    scope :with_object, lambda { |obj| where(:notified_object => obj) }
   end
 
   module ClassMethods

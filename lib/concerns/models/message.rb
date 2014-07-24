@@ -5,13 +5,11 @@ module MessageCenter::Concerns::Models::Message
     attr_accessible :attachment if MessageCenter.protected_attributes?
 
     belongs_to :conversation, :class_name => "MessageCenter::Conversation", :validate => true, :autosave => true, :counter_cache => true
-    validates_presence_of :sender
+    validates :sender, :presence => true
 
     class_attribute :on_deliver_callback
     protected :on_deliver_callback
-    scope :conversation, lambda { |conversation|
-      where(:conversation_id => conversation.id)
-    }
+    scope :conversation, lambda { |conversation| where(:conversation => conversation) }
 
     mount_uploader :attachment, AttachmentUploader if defined?(CarrierWave)
   end
