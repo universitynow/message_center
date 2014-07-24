@@ -13,24 +13,24 @@ module MessageCenter::Concerns::Models::Conversation
 
     before_validation :clean
 
-    scope :participant, lambda {|participant|
+    scope :participant, ->(participant) {
       where('message_center_items.type'=> MessageCenter::Message.name).
           order('message_center_conversations.updated_at DESC').
           joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).uniq
     }
-    scope :inbox, lambda {|participant|
+    scope :inbox, ->(participant) {
       participant(participant).merge(MessageCenter::Receipt.inbox.not_trash.not_deleted)
     }
-    scope :sentbox, lambda {|participant|
+    scope :sentbox, ->(participant) {
       participant(participant).merge(MessageCenter::Receipt.sentbox.not_trash.not_deleted)
     }
-    scope :trash, lambda {|participant|
+    scope :trash, ->(participant) {
       participant(participant).merge(MessageCenter::Receipt.trash)
     }
-    scope :unread,  lambda {|participant|
+    scope :unread,  ->(participant) {
       participant(participant).merge(MessageCenter::Receipt.is_unread)
     }
-    scope :not_trash,  lambda {|participant|
+    scope :not_trash,  ->(participant) {
       participant(participant).merge(MessageCenter::Receipt.not_trash)
     }
   end

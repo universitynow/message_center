@@ -14,21 +14,21 @@ module MessageCenter::Concerns::Models::Receipt
     belongs_to :receiver, :class_name => MessageCenter.messageable_class
     validates :receiver, :presence => true
 
-    scope :recipient, lambda { |recipient| where(:receiver => recipient) }
-    scope :notifications_receipts, lambda { joins(:item).merge(MessageCenter::Notification.all) }
-    scope :messages_receipts, lambda { joins(:item).merge(MessageCenter::Message.all) }
-    scope :notification, lambda { |item| where(:item => item) }
-    scope :conversation, lambda { |conversation|
-      joins(:message).where('message_center_items.conversation_id' => conversation.id)
+    scope :recipient, ->(recipient) { where(:receiver => recipient) }
+    scope :notifications_receipts, -> { joins(:item).merge(MessageCenter::Notification.all) }
+    scope :messages_receipts, -> { joins(:item).merge(MessageCenter::Message.all) }
+    scope :notification, ->(item) { where(:item => item) }
+    scope :conversation, ->(conversation) {
+      joins(:message).merge(MessageCenter::Message.conversation(conversation))
     }
-    scope :sentbox, lambda { where(:mailbox_type => 'sentbox') }
-    scope :inbox, lambda { where(:mailbox_type => 'inbox') }
-    scope :trash, lambda { where(:trashed => true, :deleted => false) }
-    scope :not_trash, lambda { where(:trashed => false) }
-    scope :deleted, lambda { where(:deleted => true) }
-    scope :not_deleted, lambda { where(:deleted => false) }
-    scope :is_read, lambda { where(:is_read => true) }
-    scope :is_unread, lambda { where(:is_read => false) }
+    scope :sentbox, -> { where(:mailbox_type => 'sentbox') }
+    scope :inbox, -> { where(:mailbox_type => 'inbox') }
+    scope :trash, -> { where(:trashed => true, :deleted => false) }
+    scope :not_trash, -> { where(:trashed => false) }
+    scope :deleted, -> { where(:deleted => true) }
+    scope :not_deleted, -> { where(:deleted => false) }
+    scope :is_read, -> { where(:is_read => true) }
+    scope :is_unread, -> { where(:is_read => false) }
 
     after_validation :remove_duplicate_errors
   end

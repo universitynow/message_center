@@ -9,7 +9,7 @@ module MessageCenter::Concerns::Models::Message
 
     class_attribute :on_deliver_callback
     protected :on_deliver_callback
-    scope :conversation, lambda { |conversation| where(:conversation => conversation) }
+    scope :conversation, ->(conversation) { where(:conversation => conversation) }
 
     mount_uploader :attachment, AttachmentUploader if defined?(CarrierWave)
   end

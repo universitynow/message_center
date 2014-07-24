@@ -13,14 +13,12 @@ module MessageCenter::Concerns::Models::Item
     validates :body,    :presence => true,
                         :length => { :maximum => MessageCenter.body_max_length }
 
-    scope :recipient, lambda { |recipient| joins(:receipts).merge(MessageCenter::Receipt.recipient(recipient)) }
-    scope :not_trashed, lambda { joins(:receipts).merge(MessageCenter::Receipt.not_trash) }
-    scope :unread, lambda { joins(:receipts).merge(MessageCenter::Receipt.is_unread) }
-    scope :global, lambda { where(:global => true) }
-    scope :expired, lambda { where('message_center_items.expires_at < ?', Time.now) }
-    scope :unexpired, lambda {
-      where('message_center_items.expires_at is NULL OR message_center_items.expires_at > ?', Time.now)
-    }
+    scope :recipient, ->(recipient) { joins(:receipts).merge(MessageCenter::Receipt.recipient(recipient)) }
+    scope :not_trashed, -> { joins(:receipts).merge(MessageCenter::Receipt.not_trash) }
+    scope :unread, -> { joins(:receipts).merge(MessageCenter::Receipt.is_unread) }
+    scope :global, -> { where(:global => true) }
+    scope :expired, -> { where('message_center_items.expires_at < ?', Time.now) }
+    scope :unexpired, -> { where('expires_at is NULL OR expires_at > ?', Time.now) }
 
   end
 
