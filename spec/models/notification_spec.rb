@@ -35,7 +35,7 @@ describe MessageCenter::Notification, :type => :model do
     @entity1.notify("Subject", "Body")
     expect(@entity1.mailbox.receipts.size).to eq(1)
     notification = @entity1.mailbox.receipts.first.notification
-    expect(notification).to be_is_unread(@entity1)
+    expect(notification.receipt_for(@entity1).first.is_unread?).to be_truthy
   end
 
   it "should be able to marked as read" do
@@ -43,7 +43,7 @@ describe MessageCenter::Notification, :type => :model do
     expect(@entity1.mailbox.receipts.size).to eq(1)
     notification = @entity1.mailbox.receipts.first.notification
     notification.mark_as_read(@entity1)
-    expect(notification).to be_is_read(@entity1)
+    expect(notification.receipt_for(@entity1).first.is_read?).to be_truthy
   end
 
   it "should notify several users" do

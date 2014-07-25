@@ -18,7 +18,6 @@ module MessageCenter::Concerns::Models::Item
     scope :global, -> { where(:global => true) }
     scope :expired, -> { where('message_center_items.expires_at < ?', Time.now) }
     scope :unexpired, -> { where('expires_at is NULL OR expires_at > ?', Time.now) }
-
   end
 
   def expired?
@@ -65,33 +64,6 @@ module MessageCenter::Concerns::Models::Item
     MessageCenter::Receipt.notification(self).recipient(participant)
   end
 
-  #Returns the receipt for the participant. Alias for receipt_for(participant)
-  def receipts_for(participant)
-    receipt_for(participant)
-  end
-
-  #Returns if the participant have read the Notification
-  def is_unread?(participant)
-    return false if participant.nil?
-    !receipt_for(participant).first.is_read
-  end
-
-  def is_read?(participant)
-    !is_unread?(participant)
-  end
-
-  #Returns if the participant have trashed the Notification
-  def is_trashed?(participant)
-    return false if participant.nil?
-    receipt_for(participant).first.trashed
-  end
-
-  #Returns if the participant have deleted the Notification
-  def is_deleted?(participant)
-    return false if participant.nil?
-    receipt_for(participant).first.deleted
-  end
-
   #Mark the notification as read
   def mark_as_read(participant, is_read=true)
     return if participant.nil?
@@ -124,12 +96,6 @@ module MessageCenter::Concerns::Models::Item
   def clean
     self.subject = sanitize(subject) if subject
     self.body    = sanitize(body)
-  end
-
-  #Returns notified_object. DEPRECATED
-  def object
-    warn "DEPRECATION WARNING: use 'notify_object' instead of 'object' to get the object associated with the Notification"
-    notified_object
   end
 
   def sanitize(text)

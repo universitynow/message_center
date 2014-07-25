@@ -32,7 +32,6 @@ module MessageCenter::Concerns::Models::Receipt
     after_validation :remove_duplicate_errors
   end
 
-
   module ClassMethods
     #Marks all the receipts from the relation as read
     def mark_as_read(is_read=true)

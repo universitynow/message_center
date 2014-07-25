@@ -13,9 +13,8 @@ module MessageCenter::Concerns::Models::Conversation
     before_validation :clean
 
     scope :participant, ->(participant) {
-      where('message_center_items.type'=> MessageCenter::Message.name).
-          order('message_center_conversations.updated_at DESC').
-          joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).uniq
+      joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).
+          order(:updated_at => :desc).uniq
     }
     scope :inbox, ->(participant) {
       participant(participant).merge(MessageCenter::Receipt.inbox.not_trash.not_deleted)
