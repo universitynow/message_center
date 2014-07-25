@@ -18,13 +18,13 @@ describe MessageCenter::Receipt, :type => :model do
   
   it "should be able to be marked as unread" do
     expect(@mail1.is_read).to eq(true)
-    @mail1.mark_as_unread
+    @mail1.mark_as_read(false)
     expect(@mail1.is_read).to eq(false)
   end
   
   it "should be able to be marked as read" do
     expect(@mail1.is_read).to eq(true)
-    @mail1.mark_as_unread
+    @mail1.mark_as_read(false)
     @mail1.mark_as_read
     expect(@mail1.is_read).to eq(true)    
   end
@@ -37,7 +37,7 @@ describe MessageCenter::Receipt, :type => :model do
 
   it "should be able to be marked as not deleted" do
     @mail1.deleted=true
-    @mail1.mark_as_not_deleted
+    @mail1.mark_as_deleted(false)
     expect(@mail1.deleted).to eq(false)
   end
 

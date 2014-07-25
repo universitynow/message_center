@@ -70,20 +70,10 @@ module MessageCenter::Concerns::Models::Item
     receipt_for(participant).mark_as_read(is_read)
   end
 
-  #Mark the notification as unread
-  def mark_as_unread(participant)
-    mark_as_read(participant, false)
-  end
-
   #Move the notification to the trash
   def move_to_trash(participant, trashed=true)
     return if participant.nil?
     receipt_for(participant).move_to_trash(trashed)
-  end
-
-  #Takes the notification out of the trash
-  def untrash(participant)
-    trash(participant, false)
   end
 
   #Mark the notification as deleted for one of the participant

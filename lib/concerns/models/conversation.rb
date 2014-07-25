@@ -39,11 +39,6 @@ module MessageCenter::Concerns::Models::Conversation
     receipts_for(participant).mark_as_read(is_read)
   end
 
-  #Mark the conversation as unread for one of the participants
-  def mark_as_unread(participant)
-    mark_as_read(participant, false)
-  end
-
   #Mark the conversation as starred for one of the participants
   def mark_as_starred(participant)
     return unless participant
@@ -60,11 +55,6 @@ module MessageCenter::Concerns::Models::Conversation
   def move_to_trash(participant, trashed=true)
     return unless participant
     receipts_for(participant).move_to_trash(trashed)
-  end
-
-  #Takes the conversation out of the trash for one of the participants
-  def untrash(participant)
-    move_to_trash(participant, false)
   end
 
   #Mark the conversation as deleted for one of the participants

@@ -38,29 +38,14 @@ module MessageCenter::Concerns::Models::Receipt
       update_all({:is_read => is_read})
     end
 
-    #Marks all the receipts from the relation as unread
-    def mark_as_unread
-      mark_as_read(false)
-    end
-
     #Marks the receipt as deleted
     def mark_as_deleted(deleted=true)
       update_all({:deleted => deleted})
     end
 
-    #Marks the receipt as not deleted
-    def mark_as_not_deleted
-      mark_as_deleted(false)
-    end
-
     #Marks all the receipts from the relation as trashed
     def move_to_trash(trashed=true)
       update_all({:trashed => trashed})
-    end
-
-    #Marks all the receipts from the relation as not trashed
-    def untrash
-      update_all({:trashed => false})
     end
 
     #Moves all the receipts from the relation to inbox
@@ -80,19 +65,9 @@ module MessageCenter::Concerns::Models::Receipt
     update_attributes(:deleted => deleted)
   end
 
-  #Marks the receipt as not deleted
-  def mark_as_not_deleted
-    mark_as_deleted(false)
-  end
-
   #Marks the receipt as read
   def mark_as_read(is_read=true)
     update_attributes(:is_read => is_read)
-  end
-
-  #Marks the receipt as unread
-  def mark_as_unread
-    mark_as_read(false)
   end
 
   #Marks as starred
@@ -108,11 +83,6 @@ module MessageCenter::Concerns::Models::Receipt
   #Marks the receipt as trashed
   def move_to_trash(trashed=true)
     update_attributes(:trashed => trashed)
-  end
-
-  #Marks the receipt as not trashed
-  def untrash
-    move_to_trash(false)
   end
 
   #Moves the receipt to inbox

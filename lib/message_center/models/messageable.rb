@@ -78,8 +78,8 @@ module MessageCenter
       def reply_to_conversation(conversation, reply_body, subject=nil, should_untrash=true, sanitize_text=true, attachment=nil)
         #move conversation to inbox if it is currently in the trash and should_untrash parameter is true.
         if should_untrash && mailbox.is_trashed?(conversation)
-          mailbox.receipts_for(conversation).untrash
-          mailbox.receipts_for(conversation).mark_as_not_deleted
+          mailbox.receipts_for(conversation).move_to_trash(false)
+          mailbox.receipts_for(conversation).mark_as_deleted(false)
         end
 
         reply(conversation, conversation.last_message.recipients, reply_body, subject, sanitize_text, attachment)

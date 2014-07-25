@@ -57,7 +57,7 @@ describe MessageCenter::Conversation, :type => :model do
 
   it "should be able to be marked as unread" do
     conversation.mark_as_read(entity1)
-    conversation.mark_as_unread(entity1)
+    conversation.mark_as_read(entity1, false)
     expect(conversation).to be_is_unread(entity1)
   end
 
