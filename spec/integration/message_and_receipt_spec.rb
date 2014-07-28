@@ -11,7 +11,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     describe "message sending" do
 
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
         @message1 = @receipt1.notification
       end
 
@@ -52,8 +52,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to sender" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_sender(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_sender(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -98,8 +98,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to all" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_all(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -143,8 +143,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     end
     describe "message replying to conversation" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_conversation(@receipt1.conversation,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_conversation(@receipt1.conversation, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -197,7 +197,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     describe "message sending" do
 
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
         @message1 = @receipt1.notification
       end
 
@@ -238,8 +238,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to sender" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_sender(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_sender(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -284,8 +284,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to all" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_all(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -363,7 +363,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     describe "message sending" do
 
       before do
-        @receipt1 = @entity1.send_message(@recipients,"Body","Subject")
+        @receipt1 = MessageCenter::Service.send_message(@recipients, @entity1,"Body","Subject")
         @message1 = @receipt1.notification
       end
 
@@ -407,8 +407,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to sender" do
       before do
-        @receipt1 = @entity1.send_message(@recipients,"Body","Subject")
-        @receipt2 = @entity2.reply_to_sender(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@recipients, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_sender(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -459,8 +459,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to all" do
       before do
-        @receipt1 = @entity1.send_message(@recipients,"Body","Subject")
-        @receipt2 = @entity2.reply_to_all(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@recipients, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
         @recipients2 = Array.new
@@ -545,7 +545,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     describe "message sending" do
 
       before do
-        @receipt1 = @entity1.send_message(@recipients,"Body","Subject")
+        @receipt1 = MessageCenter::Service.send_message(@recipients, @entity1,"Body","Subject")
         @message1 = @receipt1.notification
       end
 
@@ -589,8 +589,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to sender" do
       before do
-        @receipt1 = @entity1.send_message(@recipients,"Body","Subject")
-        @receipt2 = @entity2.reply_to_sender(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@recipients, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_sender(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -641,8 +641,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to all" do
       before do
-        @receipt1 = @entity1.send_message(@recipients,"Body","Subject")
-        @receipt2 = @entity2.reply_to_all(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@recipients, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
         @recipients2 = Array.new
@@ -724,7 +724,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     describe "message sending" do
 
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
         @message1 = @receipt1.notification
       end
 
@@ -765,8 +765,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to sender" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_sender(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_sender(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -811,8 +811,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
 
     describe "message replying to all" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_all(@receipt1,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end
@@ -856,8 +856,8 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
     end
     describe "message replying to conversation" do
       before do
-        @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-        @receipt2 = @entity2.reply_to_conversation(@receipt1.conversation,"Reply body")
+        @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+        @receipt2 = MessageCenter::Service.reply_to_conversation(@receipt1.conversation, @entity2, "Reply body")
         @message1 = @receipt1.notification
         @message2 = @receipt2.notification
       end

@@ -5,7 +5,7 @@ describe MessageCenter::Receipt, :type => :model do
   before do
     @entity1 = FactoryGirl.create(:user)
     @entity2 = FactoryGirl.create(:user)
-    @mail1 = @entity1.send_message(@entity2,"Body","Subject")   
+    @mail1 = MessageCenter::Service.send_message(@entity2, @entity1, "Body","Subject")
   end
   
   it "should belong to a message" do

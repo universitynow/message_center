@@ -5,19 +5,19 @@ describe MessageCenter::Mailbox, :type => :model do
   before do
     @entity1 = FactoryGirl.create(:user)
     @entity2 = FactoryGirl.create(:user)
-    @receipt1 = @entity1.send_message(@entity2,"Body","Subject")
-    @receipt2 = @entity2.reply_to_all(@receipt1,"Reply body 1")
-    @receipt3 = @entity1.reply_to_all(@receipt2,"Reply body 2")
-    @receipt4 = @entity2.reply_to_all(@receipt3,"Reply body 3")
+    @receipt1 = MessageCenter::Service.send_message(@entity2, @entity1, "Body","Subject")
+    @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body 1")
+    @receipt3 = MessageCenter::Service.reply_to_all(@receipt2, @entity1, "Reply body 2")
+    @receipt4 = MessageCenter::Service.reply_to_all(@receipt3, @entity2, "Reply body 3")
     @message1 = @receipt1.notification
     @message4 = @receipt4.notification
     @conversation = @message1.conversation.reload
   end
 
   it "should return all conversations" do
-    @conv2 = @entity1.send_message(@entity2,"Body","Subject").conversation
-    @conv3 = @entity2.send_message(@entity1,"Body","Subject").conversation
-    @conv4 =  @entity1.send_message(@entity2,"Body","Subject").conversation
+    @conv2 = MessageCenter::Service.send_message(@entity2, @entity1, "Body","Subject").conversation
+    @conv4 = MessageCenter::Service.send_message(@entity2, @entity1, "Body","Subject").conversation
+    @conv3 = MessageCenter::Service.send_message(@entity1, @entity2, "Body","Subject").conversation
 
     assert @entity1.mailbox.conversations
 
@@ -139,10 +139,10 @@ describe MessageCenter::Mailbox, :type => :model do
     assert @entity1.mailbox.receipts.inbox.mark_as_deleted
     expect(@entity1.mailbox.inbox.count).to eq(0)
 
-    @entity2.reply_to_all(@receipt1,"Reply body 1")
+    MessageCenter::Service.reply_to_all(@receipt1, @entity2, "Reply body 1")
     expect(@entity1.mailbox.inbox.count).to eq(1)
 
-    @entity2.reply_to_all(@receipt3,"Reply body 3")
+    MessageCenter::Service.reply_to_all(@receipt3, @entity2, "Reply body 3")
     expect(@entity1.mailbox.inbox.count).to eq(1)
   end
 
@@ -150,7 +150,7 @@ describe MessageCenter::Mailbox, :type => :model do
     before do
       @sti_entity1 = FactoryGirl.create(:user)
       @sti_entity2 = FactoryGirl.create(:user)
-      @sti_mail = @sti_entity1.send_message(@sti_entity2, "Body", "Subject")
+      @sti_mail = MessageCenter::Service.send_message(@sti_entity2, @sti_entity1, "Body", "Subject")
     end
 
     it "should add one to senders sentbox" do

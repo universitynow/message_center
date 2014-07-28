@@ -5,7 +5,7 @@ describe MessageCenter::NotificationMailer, :type => :mailer do
     @entity1 = FactoryGirl.create(:user)
     @entity2 = FactoryGirl.create(:duck)
     @entity3 = FactoryGirl.create(:cylon)
-    @receipt1 = MessageCenter::Notification.notify_all([@entity1,@entity2,@entity3],"Subject", "Body Body Body Body Body Body Body Body Body Body Body Body")
+    @receipt1 = MessageCenter::Service.notify([@entity1,@entity2,@entity3], nil, "Subject", "Body Body Body Body Body Body Body Body Body Body Body Body")
   end
 
   it "should send emails when should_email? is true (2 out of 3)" do
