@@ -24,13 +24,11 @@ module MessageCenter::Concerns::Models::Message
   #Use MessageCenter::Service.send_message instead.
   def deliver(recipients)
     #Sender receipt
-    sender_receipt = self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
+    self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
 
     super(recipients, 'inbox')
 
     on_deliver_callback.call(self) if on_deliver_callback
-
-    sender_receipt
   end
 
 end

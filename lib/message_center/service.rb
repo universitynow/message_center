@@ -14,10 +14,9 @@ module MessageCenter
         item.clean unless options[:sanitize_text] == false
       end
 
-      # TODO: change return value to be the notification
-      receipts = notification.deliver(recipients)
+      notification.deliver(recipients)
       MessageCenter::MailDispatcher.new(notification, recipients).call unless options[:send_mail] == false
-      receipts
+      notification
     end
 
     # Sends a messages, starting a new conversation, with the recipients

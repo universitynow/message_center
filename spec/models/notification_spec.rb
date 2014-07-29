@@ -101,11 +101,11 @@ describe MessageCenter::Notification, :type => :model do
 
   describe "scopes" do
     let(:scope_user) { FactoryGirl.create(:user) }
-    let!(:notification) { MessageCenter::Service.notify(scope_user, nil, "Subject", "Body").notification }
+    let!(:notification) { MessageCenter::Service.notify(scope_user, nil, "Subject", "Body") }
 
     describe ".unread" do
       it "finds unread notifications" do
-        unread_notification = MessageCenter::Service.notify(scope_user, nil, "Subject", "Body").notification
+        unread_notification = MessageCenter::Service.notify(scope_user, nil, "Subject", "Body")
         notification.mark_as_read(scope_user)
         expect(MessageCenter::Notification.unread.last).to eq(unread_notification)
       end

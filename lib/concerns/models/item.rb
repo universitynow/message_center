@@ -24,9 +24,6 @@ module MessageCenter::Concerns::Models::Item
     Array.wrap(recipients).each do |recipient|
       self.receipts.create!({:receiver=>recipient, :mailbox_type=> mailbox_type})
     end
-
-    return self.receipts if self.receipts.size > 1
-    self.receipts.first
   end
 
   #Returns the receipt for the participant
