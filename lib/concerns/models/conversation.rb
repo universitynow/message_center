@@ -7,6 +7,10 @@ module MessageCenter::Concerns::Models::Conversation
     has_many :messages, :dependent => :destroy
     has_many :receipts, :through => :messages
 
+    has_many :receivers, -> { uniq }, :through => :receipts
+    alias_method :recipients, :receivers
+    alias_method :participants, :receivers
+
     validates :subject, :presence => true,
               :length => { :maximum => MessageCenter.subject_max_length }
 
@@ -15,21 +19,6 @@ module MessageCenter::Concerns::Models::Conversation
     scope :participant, ->(participant) {
       joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).
           order(:updated_at => :desc).uniq
-    }
-    scope :inbox, ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.inbox.not_trash.not_deleted)
-    }
-    scope :sentbox, ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.sentbox.not_trash.not_deleted)
-    }
-    scope :trash, ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.trash)
-    }
-    scope :unread,  ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.is_unread)
-    }
-    scope :not_trash,  ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.not_trash)
     }
   end
 
@@ -66,17 +55,6 @@ module MessageCenter::Concerns::Models::Conversation
     else
       deleted_receipts
     end
-  end
-
-  #Returns an array of participants
-  def recipients
-    return [] unless original_message
-    Array original_message.recipients
-  end
-
-  #Returns an array of participants
-  def participants
-    recipients
   end
 
   #Originator of the conversation.
@@ -175,15 +153,9 @@ module MessageCenter::Concerns::Models::Conversation
     !opt_outs.unsubscriber(participant).any?
   end
 
-  protected
-
   #Use the default sanitize to clean the conversation subject
   def clean
-    self.subject = sanitize subject
-  end
-
-  def sanitize(text)
-    ::MessageCenter::Cleaner.instance.sanitize(text)
+    self.subject = MessageCenter::Cleaner.instance.sanitize(subject)
   end
 
 end

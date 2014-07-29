@@ -12,29 +12,29 @@ describe "MessageCenter::Models::Messageable through User", :type => :model do
   end
 
   it "should be able to send a message" do
-    assert @entity1.send_message(@entity2,"Body","Subject")
+    assert MessageCenter::Service.send_message(@entity2, @entity1, "Body","Subject")
   end
 
   it "should be able to reply to sender" do
-    @receipt = @entity1.send_message(@entity2,"Body","Subject")
-    assert @entity2.reply_to_sender(@receipt,"Reply body")
+    @receipt = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+    assert MessageCenter::Service.reply_to_sender(@receipt, @entity2, "Reply body")
   end
 
   it "should be able to reply to all" do
-    @receipt = @entity1.send_message(@entity2,"Body","Subject")
-    assert @entity2.reply_to_all(@receipt,"Reply body")
+    @receipt = MessageCenter::Service.send_message(@entity2, @entity1,"Body","Subject")
+    assert MessageCenter::Service.reply_to_all(@receipt, @entity2, "Reply body")
   end
 
   it "should be able to read attachment" do
     skip 'attachments can not be tested without carrierwave' unless defined?(CarrierWave)
-    @receipt = @entity1.send_message(@entity2, "Body", "Subject", nil, File.open('spec/testfile.txt'))
+    @receipt = MessageCenter::Service.send_message(@entity2, @entity1, "Body", "Subject", {:attachment => File.open('spec/testfile.txt') })
     @conversation = @receipt.conversation
     expect(@conversation.messages.first.attachment_identifier).to eq('testfile.txt')
   end
 
   it "should be the same message time as passed" do
     message_time = 5.days.ago
-    receipt = @entity1.send_message(@entity2, "Body", "Subject", nil, nil, message_time)
+    receipt = MessageCenter::Service.send_message(@entity2, @entity1, "Body", "Subject", {:created_at => message_time, :updated_at => message_time})
     # We're going to compare the string representation, because ActiveSupport::TimeWithZone
     # has microsecond precision in ruby, but some databases don't support this level of precision.
     expected = message_time.utc.to_s

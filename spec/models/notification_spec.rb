@@ -15,7 +15,7 @@ describe MessageCenter::Notification, :type => :model do
   it { is_expected.to ensure_length_of(:body).is_at_most(MessageCenter.body_max_length) }
 
   it "should notify one user" do
-    @entity1.notify("Subject", "Body")
+    MessageCenter::Service.notify(@entity1, nil, "Body", "Subject")
 
     #Check getting ALL receipts
     expect(@entity1.mailbox.receipts.size).to eq(1)
@@ -32,14 +32,14 @@ describe MessageCenter::Notification, :type => :model do
   end
 
   it "should be unread by default" do
-    @entity1.notify("Subject", "Body")
+    MessageCenter::Service.notify(@entity1, nil, "Body", "Subject")
     expect(@entity1.mailbox.receipts.size).to eq(1)
     notification = @entity1.mailbox.receipts.first.notification
     expect(notification.receipt_for(@entity1).first.is_unread?).to be_truthy
   end
 
   it "should be able to marked as read" do
-    @entity1.notify("Subject", "Body")
+    MessageCenter::Service.notify(@entity1, nil, "Body", "Subject")
     expect(@entity1.mailbox.receipts.size).to eq(1)
     notification = @entity1.mailbox.receipts.first.notification
     notification.mark_as_read(@entity1)
@@ -48,7 +48,7 @@ describe MessageCenter::Notification, :type => :model do
 
   it "should notify several users" do
     recipients = [@entity1,@entity2,@entity3]
-    MessageCenter::Notification.notify_all(recipients,"Subject","Body")
+    MessageCenter::Service.notify(recipients, nil, "Body", "Subject")
     #Check getting ALL receipts
     expect(@entity1.mailbox.receipts.size).to eq(1)
     receipt      = @entity1.mailbox.receipts.first
@@ -83,7 +83,7 @@ describe MessageCenter::Notification, :type => :model do
   end
 
   it "should notify a single recipient" do
-    MessageCenter::Notification.notify_all(@entity1,"Subject","Body")
+    MessageCenter::Service.notify(@entity1, nil, "Body", "Subject")
 
     #Check getting ALL receipts
     expect(@entity1.mailbox.receipts.size).to eq(1)
@@ -101,11 +101,11 @@ describe MessageCenter::Notification, :type => :model do
 
   describe "scopes" do
     let(:scope_user) { FactoryGirl.create(:user) }
-    let!(:notification) { scope_user.notify("Body", "Subject").notification }
+    let!(:notification) { MessageCenter::Service.notify(scope_user, nil, "Body", "Subject") }
 
     describe ".unread" do
       it "finds unread notifications" do
-        unread_notification = scope_user.notify("Body", "Subject").notification
+        unread_notification = MessageCenter::Service.notify(scope_user, nil, "Body", "Subject")
         notification.mark_as_read(scope_user)
         expect(MessageCenter::Notification.unread.last).to eq(unread_notification)
       end

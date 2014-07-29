@@ -48,5 +48,6 @@ module MessageCenter
 end
 
 require 'message_center/engine'
+require 'message_center/service'
 require 'message_center/cleaner'
 require 'message_center/mail_dispatcher'

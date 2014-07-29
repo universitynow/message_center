@@ -3,35 +3,26 @@ module MessageCenter::Concerns::Models::Notification
 
   included do
     belongs_to :notified_object, :polymorphic => :true
-
     scope :with_object, ->(obj) { where(:notified_object => obj) }
+    scope :global, -> { where(:global => true) }
+    scope :expired, -> { where('message_center_items.expires_at < ?', Time.now) }
+    scope :unexpired, -> { where('expires_at is NULL OR expires_at > ?', Time.now) }
   end
 
-  module ClassMethods
-    #Sends a Notification to all the recipients
-    def notify_all(recipients, subject, body, obj = nil, sanitize_text = true, notification_code=nil, send_mail=true)
-      notification = MessageCenter::Notification.new(
-        :recipients        => recipients,
-        :subject           => subject,
-        :body              => body,
-        :notified_object   => obj,
-        :notification_code => notification_code
-      )
+  def expired?
+    expires_at.present? && (expires_at < Time.now)
+  end
 
-      notification.deliver sanitize_text, send_mail
+  def expire!
+    unless expired?
+      expire
+      save
     end
+  end
 
-    #Takes a +Receipt+ or an +Array+ of them and returns +true+ if the delivery was
-    #successful or +false+ if some error raised
-    def successful_delivery?(receipts)
-      case receipts
-      when MessageCenter::Receipt
-        receipts.valid?
-      when Array
-        receipts.all?(&:valid?)
-      else
-        false
-      end
+  def expire
+    unless expired?
+      self.expires_at = Time.now - 1.second
     end
   end
 

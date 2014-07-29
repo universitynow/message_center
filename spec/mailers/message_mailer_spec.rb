@@ -15,7 +15,7 @@ describe MessageCenter::MessageMailer, :type => :mailer do
 
     describe "when sending new message" do
       before do
-        @receipt1 = sender.send_message([entity1, entity2, entity3], "Body", "Subject")
+        @receipt1 = MessageCenter::Service.send_message([entity1, entity2, entity3], sender, "Body", "Subject")
       end
 
       it "should send emails when should_email? is true (1 out of 3)" do
@@ -38,8 +38,8 @@ describe MessageCenter::MessageMailer, :type => :mailer do
 
     describe "when replying" do
       before do
-        @receipt1 = sender.send_message([entity1, entity2, entity3], "Body", "Subject")
-        @receipt2 = sender.reply_to_all(@receipt1, "Body")
+        @receipt1 = MessageCenter::Service.send_message([entity1, entity2, entity3], sender, "Body", "Subject")
+        @receipt2 = MessageCenter::Service.reply_to_all(@receipt1, sender, "Body")
       end
 
       it "should send emails when should_email? is true (1 out of 3)" do
