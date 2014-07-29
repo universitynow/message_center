@@ -36,7 +36,6 @@ module MessageCenter::Concerns::Models::Mailbox
     scope = MessageCenter::Conversation.participant(messageable)
     scope = scope.where(:message_center_receipts => {:mailbox_type => options[:mailbox_type]}) if options[:mailbox_type]
     scope = scope.merge(MessageCenter::Receipt.not_trash.not_deleted) unless 'trash'==options[:mailbox_type]
-    #conv = get_conversations(options[:mailbox_type])
 
     if options[:read] == false || options[:unread]
       scope = scope.merge(MessageCenter::Receipt.is_unread)
