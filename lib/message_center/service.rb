@@ -1,59 +1,87 @@
 module MessageCenter
   module Service
 
-    #Sends a notification to the messageable
-    def self.notify(recipients, sender, subject,body,obj = nil,sanitize_text=true,notification_code=nil,send_mail=true)
-      notification = MessageCenter::Notification.new(
-          :sender            => sender,
-          :recipients        => Array.wrap(recipients),
-          :subject           => subject,
-          :body              => body,
-          :notified_object   => obj,
-          :notification_code => notification_code
-      )
+    # Sends a notification to the recipients
+    # options can include:
+    #   :sanitize_text - boolean
+    #   :send_mail - boolean
+    def self.notify(recipients, sender, subject, body, attributes={}, options={})
+      sanitize_text = options.delete(:sanitize_text) != false
+      send_mail = options.delete(:send_mail) != false
 
-      notification.deliver sanitize_text, send_mail
+      notification = MessageCenter::Notification.create(attributes) do |item|
+        item.sender = sender
+        item.recipients = Array.wrap(recipients)
+        item.subject = subject
+        item.body = body
+      end
+
+      # TODO: change return value to be the notification
+      # TODO: pass recipients to deliver directly
+      notification.deliver(sanitize_text, send_mail)
     end
 
-    #Sends a messages, starting a new conversation, with the messageable
-    #as originator
+    # Sends a messages, starting a new conversation, with the recipients
     # TODO: reverse subject, body to match notify or vice-versa
     def self.send_message(recipients, sender, msg_body, subject, sanitize_text=true, attachment=nil, message_timestamp = Time.now)
-      convo = MessageCenter::Conversation.create(
+      attributes = {
+        :attachment   => attachment,
+        :created_at   => message_timestamp,
+        :updated_at   => message_timestamp
+      }
+      options = {
+        :sanitize_text => sanitize_text
+      }
+      new_send_message(recipients, sender, subject, msg_body, attributes, options)
+    end
+
+    # New signature for send_message - need to update specs to call this
+    def self.new_send_message(recipients, sender, subject, body, attributes={}, options={})
+      conversation = MessageCenter::Conversation.create(
           :subject    => subject,
-          :created_at => message_timestamp,
-          :updated_at => message_timestamp
+          :created_at => attributes[:created_at],
+          :updated_at => attributes[:updated_at]
       )
 
-      message = MessageCenter::Message.new(
-          :sender       => sender,
-          :conversation => convo,
-          :recipients   => recipients,
-          :body         => msg_body,
-          :subject      => subject,
-          :attachment   => attachment,
-          :created_at   => message_timestamp,
-          :updated_at   => message_timestamp
-      )
+      message = MessageCenter::Message.new(attributes) do |item|
+        item.sender = sender
+        item.conversation = conversation
+        item.recipients = Array.wrap(recipients)
+        item.subject = subject
+        item.body = body
+      end
 
+      sanitize_text = options.delete(:sanitize_text) != false
       message.deliver(false, sanitize_text)
+
     end
 
     #Basic reply method. USE NOT RECOMENDED.
     #Use reply_to_sender, reply_to_all and reply_to_conversation instead.
-    def self.reply(conversation, recipients, sender, reply_body, subject=nil, sanitize_text=true, attachment=nil)
-      subject = subject || "#{conversation.subject}"
-      response = MessageCenter::Message.new(
-          :sender       => sender,
-          :conversation => conversation,
-          :recipients   => recipients,
-          :body         => reply_body,
-          :subject      => subject,
-          :attachment   => attachment
-      )
+    def self.reply(conversation, recipients, sender, body, subject=nil, sanitize_text=true, attachment=nil)
+      attributes = {
+        :attachment => attachment
+      }
+      attributes[:subject]=subject if subject.present?
+      options = {
+        :sanitize_text => sanitize_text
+      }
+      new_reply(conversation, recipients, sender, body, attributes, options)
+    end
+
+    def self.new_reply(conversation, recipients, sender, body, attributes={}, options={})
+      subject = attributes.delete(:subject) || conversation.subject
+      response = MessageCenter::Message.new(attributes) do |item|
+        item.conversation = conversation
+        item.sender = sender
+        item.recipients = Array.wrap(recipients)
+        item.subject = subject
+        item.body = body
+      end
 
       response.recipients.delete(sender)
-      response.deliver true, sanitize_text
+      sanitize_text = options.delete(:sanitize_text) != false
+      response.deliver(true, sanitize_text)
     end
 
     #Replies to the sender of the message in the conversation
