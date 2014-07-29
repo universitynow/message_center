@@ -18,10 +18,9 @@ module MessageCenter::Concerns::Models::Item
   end
 
   #Delivers a Notification. USE NOT RECOMENDED.
-  #Use MessageCenter::Models::Message.notify and Notification.notify_all instead.
-  def deliver(recipients, should_clean = true, send_mail = true)
+  #Use MessageCenter::Service.notify instead
+  def deliver(recipients, send_mail = true)
     recipients = Array.wrap(recipients)
-    clean if should_clean
 
     #Receiver receipts
     recipients.each do |recipient|

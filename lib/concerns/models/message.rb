@@ -22,9 +22,8 @@ module MessageCenter::Concerns::Models::Message
 
   #Delivers a Message. USE NOT RECOMENDED.
   #Use MessageCenter::Models::Message.send_message instead.
-    def deliver(recipients, reply = false, should_clean = true)
+    def deliver(recipients)
       recipients = Array.wrap(recipients)
-      self.clean if should_clean
 
       #Receiver receipts
       recipients.each do |recipient|
@@ -35,7 +34,6 @@ module MessageCenter::Concerns::Models::Message
       sender_receipt = self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
 
       MessageCenter::MailDispatcher.new(self, recipients).call
-      conversation.touch if reply
       on_deliver_callback.call(self) if on_deliver_callback
 
       sender_receipt

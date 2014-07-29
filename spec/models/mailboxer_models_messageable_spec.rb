@@ -27,14 +27,14 @@ describe "MessageCenter::Models::Messageable through User", :type => :model do
 
   it "should be able to read attachment" do
     skip 'attachments can not be tested without carrierwave' unless defined?(CarrierWave)
-    @receipt = MessageCenter::Service.send_message(@entity2, @entity1, "Body", "Subject", nil, File.open('spec/testfile.txt'))
+    @receipt = MessageCenter::Service.send_message(@entity2, @entity1, "Body", "Subject", {:attachment => File.open('spec/testfile.txt') })
     @conversation = @receipt.conversation
     expect(@conversation.messages.first.attachment_identifier).to eq('testfile.txt')
   end
 
   it "should be the same message time as passed" do
     message_time = 5.days.ago
-    receipt = MessageCenter::Service.send_message(@entity2, @entity1, "Body", "Subject", nil, nil, message_time)
+    receipt = MessageCenter::Service.send_message(@entity2, @entity1, "Body", "Subject", {:created_at => message_time, :updated_at => message_time})
     # We're going to compare the string representation, because ActiveSupport::TimeWithZone
     # has microsecond precision in ruby, but some databases don't support this level of precision.
     expected = message_time.utc.to_s

@@ -153,15 +153,9 @@ module MessageCenter::Concerns::Models::Conversation
     !opt_outs.unsubscriber(participant).any?
   end
 
-  protected
-
   #Use the default sanitize to clean the conversation subject
   def clean
-    self.subject = sanitize subject
-  end
-
-  def sanitize(text)
-    ::MessageCenter::Cleaner.instance.sanitize(text)
+    self.subject = MessageCenter::Cleaner.instance.sanitize(subject)
   end
 
 end
