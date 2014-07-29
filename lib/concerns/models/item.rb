@@ -15,26 +15,6 @@ module MessageCenter::Concerns::Models::Item
     scope :recipient, ->(recipient) { joins(:receipts).merge(MessageCenter::Receipt.recipient(recipient)) }
     scope :not_trashed, -> { joins(:receipts).merge(MessageCenter::Receipt.not_trash) }
     scope :unread, -> { joins(:receipts).merge(MessageCenter::Receipt.is_unread) }
-    scope :global, -> { where(:global => true) }
-    scope :expired, -> { where('message_center_items.expires_at < ?', Time.now) }
-    scope :unexpired, -> { where('expires_at is NULL OR expires_at > ?', Time.now) }
-  end
-
-  def expired?
-    expires_at.present? && (expires_at < Time.now)
-  end
-
-  def expire!
-    unless expired?
-      expire
-      save
-    end
-  end
-
-  def expire
-    unless expired?
-      self.expires_at = Time.now - 1.second
-    end
   end
 
   #Delivers a Notification. USE NOT RECOMENDED.
