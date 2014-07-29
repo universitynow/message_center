@@ -76,49 +76,6 @@ describe MessageCenter::Conversation, :type => :model do
     }.to change{ conversation.receipts_for(new_user).count }.by 1
   end
 
-  describe "scopes" do
-    let(:participant) { FactoryGirl.create(:user) }
-    let!(:inbox_conversation) { MessageCenter::Service.send_message(participant, entity1, "Body", "Subject").notification.conversation }
-    let!(:sentbox_conversation) { MessageCenter::Service.send_message(entity1, participant, "Body", "Subject").notification.conversation }
-
-
-    describe ".participant" do
-      it "finds conversations with receipts for participant" do
-        expect(MessageCenter::Conversation.participant(participant)).to eq([sentbox_conversation, inbox_conversation])
-      end
-    end
-
-    describe ".inbox" do
-      it "finds inbox conversations with receipts for participant" do
-        expect(MessageCenter::Conversation.inbox(participant)).to eq([inbox_conversation])
-      end
-    end
-
-    describe ".sentbox" do
-      it "finds sentbox conversations with receipts for participant" do
-        expect(MessageCenter::Conversation.sentbox(participant)).to eq([sentbox_conversation])
-      end
-    end
-
-    describe ".trash" do
-      it "finds trash conversations with receipts for participant" do
-        trashed_conversation = MessageCenter::Service.send_message(participant, entity1, "Body", "Subject").notification.conversation
-        trashed_conversation.move_to_trash(participant)
-
-        expect(MessageCenter::Conversation.trash(participant)).to eq([trashed_conversation])
-      end
-    end
-
-    describe ".unread" do
-      it "finds unread conversations with receipts for participant" do
-        [sentbox_conversation, inbox_conversation].each {|c| c.mark_as_read(participant) }
-        unread_conversation = MessageCenter::Service.send_message(participant, entity1, "Body", "Subject").notification.conversation
-
-        expect(MessageCenter::Conversation.unread(participant)).to eq([unread_conversation])
-      end
-    end
-  end
-
   describe "#is_completely_trashed?" do
     it "returns true if all receipts in conversation are trashed for participant" do
       conversation.move_to_trash(entity1)

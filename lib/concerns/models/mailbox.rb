@@ -12,19 +12,19 @@ module MessageCenter::Concerns::Models::Mailbox
 
   #Returns the notifications for the messageable
   def notifications(options = {})
-    notifs = MessageCenter::Notification.recipient(messageable).order(:created_at => :desc)
+    scope = MessageCenter::Notification.recipient(messageable).order(:created_at => :desc)
     if options[:read] == false || options[:unread]
-      notifs = notifs.unread
+      scope = scope.unread
     end
 
-    notifs
+    scope
   end
 
   #Returns the conversations for the messageable
   #
   #Options
   #
-  #* :mailbox_type
+  #* :mailbox_type (required)
   #  * "inbox"
   #  * "sentbox"
   #  * "trash"
@@ -33,13 +33,16 @@ module MessageCenter::Concerns::Models::Mailbox
   #* :unread=true
   #
   def conversations(options = {})
-    conv = get_conversations(options[:mailbox_type])
+    scope = MessageCenter::Conversation.participant(messageable)
+    scope = scope.where(:message_center_receipts => {:mailbox_type => options[:mailbox_type]}) if options[:mailbox_type]
+    scope = scope.merge(MessageCenter::Receipt.not_trash.not_deleted) unless 'trash'==options[:mailbox_type]
+    #conv = get_conversations(options[:mailbox_type])
 
     if options[:read] == false || options[:unread]
-      conv = conv.unread(messageable)
+      scope = scope.merge(MessageCenter::Receipt.is_unread)
     end
 
-    conv
+    scope
   end
 
   #Returns the conversations in the inbox of messageable
@@ -106,23 +109,6 @@ module MessageCenter::Concerns::Models::Mailbox
         object.receipt_for(messageable)
       when MessageCenter::Conversation
         object.receipts_for(messageable)
-    end
-  end
-
-  private
-
-  def get_conversations(mailbox)
-    case mailbox
-      when 'inbox'
-        MessageCenter::Conversation.inbox(messageable)
-      when 'sentbox'
-        MessageCenter::Conversation.sentbox(messageable)
-      when 'trash'
-        MessageCenter::Conversation.trash(messageable)
-      when  'not_trash'
-        MessageCenter::Conversation.not_trash(messageable)
-      else
-        MessageCenter::Conversation.participant(messageable)
     end
   end
 

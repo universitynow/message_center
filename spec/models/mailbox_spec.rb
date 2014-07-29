@@ -117,6 +117,7 @@ describe MessageCenter::Mailbox, :type => :model do
     expect(@entity1.mailbox.receipts.inbox[1]).to eq(MessageCenter::Receipt.recipient(@entity1).inbox.conversation(@conversation)[1])
 
     assert @entity1.mailbox.receipts.inbox.mark_as_deleted
+    @entity1.mailbox.inbox.reload
     expect(@entity1.mailbox.inbox.count).to eq(0)
   end
 

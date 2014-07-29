@@ -20,21 +20,6 @@ module MessageCenter::Concerns::Models::Conversation
       joins(:receipts).merge(MessageCenter::Receipt.recipient(participant)).
           order(:updated_at => :desc).uniq
     }
-    scope :inbox, ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.inbox.not_trash.not_deleted)
-    }
-    scope :sentbox, ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.sentbox.not_trash.not_deleted)
-    }
-    scope :trash, ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.trash)
-    }
-    scope :unread,  ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.is_unread)
-    }
-    scope :not_trash,  ->(participant) {
-      participant(participant).merge(MessageCenter::Receipt.not_trash)
-    }
   end
 
   #Mark the conversation as read for one of the participants
