@@ -7,6 +7,10 @@ module MessageCenter::Concerns::Models::Conversation
     has_many :messages, :dependent => :destroy
     has_many :receipts, :through => :messages
 
+    has_many :receivers, -> { uniq }, :through => :receipts
+    alias_method :recipients, :receivers
+    alias_method :participants, :receivers
+
     validates :subject, :presence => true,
               :length => { :maximum => MessageCenter.subject_max_length }
 
@@ -66,17 +70,6 @@ module MessageCenter::Concerns::Models::Conversation
     else
       deleted_receipts
     end
-  end
-
-  #Returns an array of participants
-  def recipients
-    return [] unless original_message
-    Array original_message.recipients
-  end
-
-  #Returns an array of participants
-  def participants
-    recipients
   end
 
   #Originator of the conversation.

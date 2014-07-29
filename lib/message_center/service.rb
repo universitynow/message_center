@@ -11,14 +11,12 @@ module MessageCenter
 
       notification = MessageCenter::Notification.create!(attributes) do |item|
         item.sender = sender
-        item.recipients = Array.wrap(recipients)
         item.subject = subject
         item.body = body
       end
 
       # TODO: change return value to be the notification
-      # TODO: pass recipients to deliver directly
-      notification.deliver(sanitize_text, send_mail)
+      notification.deliver(recipients, sanitize_text, send_mail)
     end
 
     # Sends a messages, starting a new conversation, with the recipients
@@ -46,13 +44,12 @@ module MessageCenter
       message = MessageCenter::Message.create!(attributes) do |item|
         item.sender = sender
         item.conversation = conversation
-        item.recipients = Array.wrap(recipients)
         item.subject = subject
         item.body = body
       end
 
       sanitize_text = options.delete(:sanitize_text) != false
-      message.deliver(false, sanitize_text)
+      message.deliver(recipients, false, sanitize_text)
 
     end
 
@@ -72,16 +69,17 @@ module MessageCenter
     def self.new_reply(conversation, recipients, sender, body, attributes={}, options={})
       subject = attributes.delete(:subject) || conversation.subject
       response = MessageCenter::Message.create!(attributes) do |item|
+      recipients = Array.wrap(recipients)
+      response = MessageCenter::Message.new(attributes) do |item|
         item.conversation = conversation
         item.sender = sender
-        item.recipients = Array.wrap(recipients)
         item.subject = subject
         item.body = body
       end
 
-      response.recipients.delete(sender)
+      recipients.delete(sender)
       sanitize_text = options.delete(:sanitize_text) != false
-      response.deliver(true, sanitize_text)
+      response.deliver(recipients, true, sanitize_text)
     end
 
     #Replies to the sender of the message in the conversation
@@ -91,7 +89,7 @@ module MessageCenter
 
     #Replies to all the recipients of the message in the conversation
     def self.reply_to_all(receipt, sender, reply_body, subject=nil, sanitize_text=true, attachment=nil)
-      reply(receipt.conversation, receipt.message.recipients, sender, reply_body, subject, sanitize_text, attachment)
+      reply(receipt.conversation, receipt.message.receivers, sender, reply_body, subject, sanitize_text, attachment)
     end
 
     #Replies to all the recipients of the last message in the conversation and untrash any trashed message by messageable

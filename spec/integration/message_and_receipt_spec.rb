@@ -42,7 +42,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message1.recipients
+        recipients = @message1.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -85,7 +85,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -131,7 +131,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -176,7 +176,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -228,7 +228,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message1.recipients
+        recipients = @message1.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -271,7 +271,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -317,7 +317,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -396,7 +396,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message1.recipients
+        recipients = @message1.recipients.to_a
         expect(recipients.count).to eq(3)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -445,7 +445,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -498,7 +498,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(3)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -578,7 +578,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message1.recipients
+        recipients = @message1.recipients.to_a
         expect(recipients.count).to eq(3)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -627,7 +627,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -680,7 +680,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(3)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -755,7 +755,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message1.recipients
+        recipients = @message1.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -798,7 +798,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -844,7 +844,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)
@@ -889,7 +889,7 @@ describe "Messages And MessageCenter::Receipts", :type => :request do
       end
 
       it "should have the correct recipients" do
-        recipients = @message2.recipients
+        recipients = @message2.recipients.to_a
         expect(recipients.count).to eq(2)
         expect(recipients.count(@entity1)).to eq(1)
         expect(recipients.count(@entity2)).to eq(1)

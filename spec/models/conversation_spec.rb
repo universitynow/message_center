@@ -33,9 +33,8 @@ describe MessageCenter::Conversation, :type => :model do
 
   it "should have all conversation users" do
     expect(conversation.recipients.count).to eq(2)
-    expect(conversation.recipients.count).to eq(2)
-    expect(conversation.recipients.count(entity1)).to eq(1)
-    expect(conversation.recipients.count(entity2)).to eq(1)
+    expect(conversation.recipients.to_a.count(entity1)).to eq(1)
+    expect(conversation.recipients.to_a.count(entity2)).to eq(1)
   end
 
   it "should be able to be marked as deleted" do

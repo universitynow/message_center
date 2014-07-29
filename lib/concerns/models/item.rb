@@ -2,10 +2,10 @@ module MessageCenter::Concerns::Models::Item
   extend ActiveSupport::Concern
 
   included do
-    attr_writer :recipients
-
     belongs_to :sender, :class_name => MessageCenter.messageable_class
     has_many :receipts, :dependent => :destroy
+    has_many :receivers, :through => :receipts
+    alias_method :recipients, :receivers
 
     validates :subject, :presence => true,
                         :length => { :maximum => MessageCenter.subject_max_length }
@@ -39,24 +39,18 @@ module MessageCenter::Concerns::Models::Item
 
   #Delivers a Notification. USE NOT RECOMENDED.
   #Use MessageCenter::Models::Message.notify and Notification.notify_all instead.
-  def deliver(should_clean = true, send_mail = true)
+  def deliver(recipients, should_clean = true, send_mail = true)
+    recipients = Array.wrap(recipients)
     clean if should_clean
     temp_receipts = recipients.map { |r| build_receipt(r, nil, false) }
 
     if temp_receipts.all?(&:valid?)
       temp_receipts.each(&:save!)   #Save receipts
       MessageCenter::MailDispatcher.new(self, recipients).call if send_mail
-      self.recipients = nil
     end
 
     return temp_receipts if temp_receipts.size > 1
     temp_receipts.first
-  end
-
-  #Returns the recipients of the Notification
-  def recipients
-    return Array.wrap(@recipients) unless @recipients.blank?
-    @recipients = receipts.map { |receipt| receipt.receiver }
   end
 
   #Returns the receipt for the participant
