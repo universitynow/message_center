@@ -25,22 +25,19 @@ module MessageCenter::Concerns::Models::Message
     def deliver(recipients, reply = false, should_clean = true)
       recipients = Array.wrap(recipients)
       self.clean if should_clean
+
       #Receiver receipts
-      temp_receipts = recipients.map { |r| build_receipt(r, 'inbox') }
+      recipients.each do |recipient|
+        self.receipts.create!({:receiver=>recipient, :mailbox_type=>'inbox'})
+      end
 
       #Sender receipt
-      sender_receipt = build_receipt(sender, 'sentbox', true)
+      sender_receipt = self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
 
-      temp_receipts << sender_receipt
+      MessageCenter::MailDispatcher.new(self, recipients).call
+      conversation.touch if reply
+      on_deliver_callback.call(self) if on_deliver_callback
 
-      if temp_receipts.all?(&:save!)
-
-        MessageCenter::MailDispatcher.new(self, recipients).call
-
-        conversation.touch if reply
-
-        on_deliver_callback.call(self) if on_deliver_callback
-      end
       sender_receipt
     end
 

@@ -70,7 +70,6 @@ module MessageCenter
       subject = attributes.delete(:subject) || conversation.subject
       response = MessageCenter::Message.create!(attributes) do |item|
       recipients = Array.wrap(recipients)
-      response = MessageCenter::Message.new(attributes) do |item|
         item.conversation = conversation
         item.sender = sender
         item.subject = subject

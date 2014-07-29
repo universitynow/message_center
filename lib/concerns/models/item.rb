@@ -42,15 +42,16 @@ module MessageCenter::Concerns::Models::Item
   def deliver(recipients, should_clean = true, send_mail = true)
     recipients = Array.wrap(recipients)
     clean if should_clean
-    temp_receipts = recipients.map { |r| build_receipt(r, nil, false) }
 
-    if temp_receipts.all?(&:valid?)
-      temp_receipts.each(&:save!)   #Save receipts
-      MessageCenter::MailDispatcher.new(self, recipients).call if send_mail
+    #Receiver receipts
+    recipients.each do |recipient|
+      self.receipts.create!({:receiver=>recipient})
     end
 
-    return temp_receipts if temp_receipts.size > 1
-    temp_receipts.first
+    MessageCenter::MailDispatcher.new(self, recipients).call if send_mail
+
+    return self.receipts if self.receipts.size > 1
+    self.receipts.first
   end
 
   #Returns the receipt for the participant
@@ -84,17 +85,6 @@ module MessageCenter::Concerns::Models::Item
 
   def sanitize(text)
     ::MessageCenter::Cleaner.instance.sanitize(text)
-  end
-
-  private
-
-  def build_receipt(receiver, mailbox_type, is_read = false)
-    MessageCenter::Receipt.new(
-      :item         => self,
-      :mailbox_type => mailbox_type || 'inbox',
-      :receiver     => receiver,
-      :is_read      => is_read
-    )
   end
 
 end
