@@ -9,7 +9,7 @@ module MessageCenter
       sanitize_text = options.delete(:sanitize_text) != false
       send_mail = options.delete(:send_mail) != false
 
-      notification = MessageCenter::Notification.create(attributes) do |item|
+      notification = MessageCenter::Notification.create!(attributes) do |item|
         item.sender = sender
         item.recipients = Array.wrap(recipients)
         item.subject = subject
@@ -37,13 +37,13 @@ module MessageCenter
 
     # New signature for send_message - need to update specs to call this
     def self.new_send_message(recipients, sender, subject, body, attributes={}, options={})
-      conversation = MessageCenter::Conversation.create(
+      conversation = MessageCenter::Conversation.create!(
           :subject    => subject,
           :created_at => attributes[:created_at],
           :updated_at => attributes[:updated_at]
       )
 
-      message = MessageCenter::Message.new(attributes) do |item|
+      message = MessageCenter::Message.create!(attributes) do |item|
         item.sender = sender
         item.conversation = conversation
         item.recipients = Array.wrap(recipients)
@@ -71,7 +71,7 @@ module MessageCenter
 
     def self.new_reply(conversation, recipients, sender, body, attributes={}, options={})
       subject = attributes.delete(:subject) || conversation.subject
-      response = MessageCenter::Message.new(attributes) do |item|
+      response = MessageCenter::Message.create!(attributes) do |item|
         item.conversation = conversation
         item.sender = sender
         item.recipients = Array.wrap(recipients)
