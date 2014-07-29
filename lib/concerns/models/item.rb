@@ -19,15 +19,11 @@ module MessageCenter::Concerns::Models::Item
 
   #Delivers a Notification. USE NOT RECOMENDED.
   #Use MessageCenter::Service.notify instead
-  def deliver(recipients, send_mail = true)
-    recipients = Array.wrap(recipients)
-
+  def deliver(recipients, mailbox_type=nil)
     #Receiver receipts
-    recipients.each do |recipient|
-      self.receipts.create!({:receiver=>recipient})
+    Array.wrap(recipients).each do |recipient|
+      self.receipts.create!({:receiver=>recipient, :mailbox_type=> mailbox_type})
     end
-
-    MessageCenter::MailDispatcher.new(self, recipients).call if send_mail
 
     return self.receipts if self.receipts.size > 1
     self.receipts.first

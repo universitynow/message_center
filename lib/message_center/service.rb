@@ -15,8 +15,9 @@ module MessageCenter
       end
 
       # TODO: change return value to be the notification
-      send_mail = options.delete(:send_mail) != false
-      notification.deliver(recipients, send_mail)
+      receipts = notification.deliver(recipients)
+      MessageCenter::MailDispatcher.new(notification, recipients).call unless options[:send_mail] == false
+      receipts
     end
 
     # Sends a messages, starting a new conversation, with the recipients
@@ -39,6 +40,8 @@ module MessageCenter
       end
 
       message.deliver(recipients)
+      MessageCenter::MailDispatcher.new(message, recipients).call
+      message.receipts.first
     end
 
     #Basic reply method. USE NOT RECOMENDED.
@@ -56,6 +59,8 @@ module MessageCenter
 
       recipients = Array.wrap(recipients) - [sender]
       response.deliver(recipients)
+      MessageCenter::MailDispatcher.new(response, recipients).call
+      response.receipts.first
     end
 
     #Replies to the sender of the message in the conversation

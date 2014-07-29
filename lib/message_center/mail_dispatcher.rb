@@ -4,7 +4,7 @@ module MessageCenter
     attr_reader :mailable, :recipients
 
     def initialize(mailable, recipients)
-      @mailable, @recipients = mailable, recipients
+      @mailable, @recipients = mailable, Array.wrap(recipients)
     end
 
     def call

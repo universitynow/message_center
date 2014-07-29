@@ -21,22 +21,16 @@ module MessageCenter::Concerns::Models::Message
   end
 
   #Delivers a Message. USE NOT RECOMENDED.
-  #Use MessageCenter::Models::Message.send_message instead.
-    def deliver(recipients)
-      recipients = Array.wrap(recipients)
+  #Use MessageCenter::Service.send_message instead.
+  def deliver(recipients)
+    #Sender receipt
+    sender_receipt = self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
 
-      #Receiver receipts
-      recipients.each do |recipient|
-        self.receipts.create!({:receiver=>recipient, :mailbox_type=>'inbox'})
-      end
+    super(recipients, 'inbox')
 
-      #Sender receipt
-      sender_receipt = self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
+    on_deliver_callback.call(self) if on_deliver_callback
 
-      MessageCenter::MailDispatcher.new(self, recipients).call
-      on_deliver_callback.call(self) if on_deliver_callback
-
-      sender_receipt
-    end
+    sender_receipt
+  end
 
 end
