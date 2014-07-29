@@ -55,18 +55,7 @@ module MessageCenter
 
     #Basic reply method. USE NOT RECOMENDED.
     #Use reply_to_sender, reply_to_all and reply_to_conversation instead.
-    def self.reply(conversation, recipients, sender, body, subject=nil, sanitize_text=true, attachment=nil)
-      attributes = {
-        :attachment => attachment
-      }
-      attributes[:subject]=subject if subject.present?
-      options = {
-        :sanitize_text => sanitize_text
-      }
-      new_reply(conversation, recipients, sender, body, attributes, options)
-    end
-
-    def self.new_reply(conversation, recipients, sender, body, attributes={}, options={})
+    def self.reply(conversation, recipients, sender, body, attributes={}, options={})
       subject = attributes.delete(:subject) || conversation.subject
       response = MessageCenter::Message.create!(attributes) do |item|
       recipients = Array.wrap(recipients)
@@ -82,25 +71,24 @@ module MessageCenter
     end
 
     #Replies to the sender of the message in the conversation
-    def self.reply_to_sender(receipt, sender, reply_body, subject=nil, sanitize_text=true, attachment=nil)
-      reply(receipt.conversation, receipt.message.sender, sender, reply_body, subject, sanitize_text, attachment)
+    def self.reply_to_sender(receipt, sender, body, attributes={}, options={})
+      reply(receipt.conversation, receipt.message.sender, sender, body, attributes, options)
     end
 
     #Replies to all the recipients of the message in the conversation
-    def self.reply_to_all(receipt, sender, reply_body, subject=nil, sanitize_text=true, attachment=nil)
-      reply(receipt.conversation, receipt.message.receivers, sender, reply_body, subject, sanitize_text, attachment)
+    def self.reply_to_all(receipt, sender, body, attributes={}, options={})
+      reply(receipt.conversation, receipt.message.receivers, sender, body, attributes, options)
     end
 
     #Replies to all the recipients of the last message in the conversation and untrash any trashed message by messageable
     #if should_untrash is set to true (this is so by default)
-    def self.reply_to_conversation(conversation, sender, reply_body, subject=nil, should_untrash=true, sanitize_text=true, attachment=nil)
+    def self.reply_to_conversation(conversation, sender, body, attributes={}, options={})
       #move conversation to inbox if it is currently in the trash and should_untrash parameter is true.
-      if should_untrash && sender.mailbox.is_trashed?(conversation)
+      if options.delete(:should_untrash) != false && sender.mailbox.is_trashed?(conversation)
         sender.mailbox.receipts_for(conversation).move_to_trash(false)
         sender.mailbox.receipts_for(conversation).mark_as_deleted(false)
       end
-
-      reply(conversation, conversation.last_message.recipients, sender, reply_body, subject, sanitize_text, attachment)
+      reply(conversation, conversation.last_message.recipients, sender, body, attributes, options)
     end
 
   end
