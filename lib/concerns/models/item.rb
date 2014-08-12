@@ -28,7 +28,7 @@ module MessageCenter::Concerns::Models::Item
 
   #Returns the receipt for the participant
   def receipt_for(participant)
-    MessageCenter::Receipt.notification(self).recipient(participant)
+    receipts.find {|r| r.receiver_id==participant.id}
   end
 
   #Mark the notification as read
