@@ -15,16 +15,16 @@ describe MessageCenter::Message, :type => :model do
   end  
   
   it "should have right recipients" do
-  	expect(@receipt1.notification.recipients.count).to eq(2)
-  	expect(@receipt2.notification.recipients.count).to eq(2)
-  	expect(@receipt3.notification.recipients.count).to eq(2)
-  	expect(@receipt4.notification.recipients.count).to eq(2)      
+    expect(@receipt1.notification.recipients.count).to eq(2)
+    expect(@receipt2.notification.recipients.count).to eq(2)
+    expect(@receipt3.notification.recipients.count).to eq(2)
+    expect(@receipt4.notification.recipients.count).to eq(2)
   end
 
   it "should be able to be marked as deleted" do
     expect(@receipt1.deleted).to eq(false)
     @message1.mark_as_deleted @entity1
-    expect(@message1.receipt_for(@entity1).first.deleted?).to eq(true)
+    expect(@message1.receipt_for(@entity1).deleted?).to eq(true)
   end
     
 end
