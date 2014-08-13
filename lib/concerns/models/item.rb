@@ -21,8 +21,10 @@ module MessageCenter::Concerns::Models::Item
   #Use MessageCenter::Service.notify instead
   def deliver(recipients, mailbox_type=nil)
     #Receiver receipts
-    Array.wrap(recipients).each do |recipient|
-      self.receipts.create!({:receiver=>recipient, :mailbox_type=> mailbox_type})
+    self.transaction do
+      Array.wrap(recipients).each do |recipient|
+        self.receipts.create!({:receiver=>recipient, :mailbox_type=> mailbox_type})
+      end
     end
   end
 
