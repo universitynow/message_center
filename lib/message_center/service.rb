@@ -37,7 +37,7 @@ module MessageCenter
       end
 
       message.deliver(recipients)
-      MessageCenter::MailDispatcher.new(message, recipients).call
+      MessageCenter::MailDispatcher.new(message, recipients).call unless options[:send_mail] == false
       message.receipts.first
     end
 
