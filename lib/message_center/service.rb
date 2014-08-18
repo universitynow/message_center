@@ -1,5 +1,10 @@
+require 'hooks'
+
 module MessageCenter
-  module Service
+  class Service
+    include Hooks
+
+    define_hooks :after_notify, :after_send_message, :after_reply
 
     # Sends a notification to the recipients
     # options can include:
@@ -14,7 +19,9 @@ module MessageCenter
       end
 
       notification.deliver(recipients)
-      MessageCenter::MailDispatcher.new(notification, recipients).call unless options[:send_mail] == false
+
+      run_hook :after_notify, notification, recipients, options
+
       notification
     end
 
@@ -37,7 +44,9 @@ module MessageCenter
       end
 
       message.deliver(recipients)
-      MessageCenter::MailDispatcher.new(message, recipients).call unless options[:send_mail] == false
+
+      run_hook :after_send_message, message, recipients, options
+
       message.receipts.first
     end
 
@@ -56,7 +65,9 @@ module MessageCenter
 
       recipients = Array.wrap(recipients) - [sender]
       message.deliver(recipients)
-      MessageCenter::MailDispatcher.new(message, recipients).call
+
+      run_hook :after_reply, message, recipients, options
+
       message.receipts.first
     end
 
@@ -79,6 +90,10 @@ module MessageCenter
         sender.mailbox.receipts_for(conversation).mark_as_deleted(false)
       end
       reply(conversation, conversation.last_message.recipients, sender, body, attributes, options)
+    end
+
+    def self.call_mail_dispatcher(item, recipients, options)
+      MessageCenter::MailDispatcher.new(item, recipients).call unless options[:send_mail] == false
     end
 
   end

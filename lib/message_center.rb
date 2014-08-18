@@ -21,6 +21,8 @@ module MessageCenter
   @@default_from = 'no-reply@message_center.com'
   mattr_accessor :uses_emails
   @@uses_emails = true
+  mattr_accessor :use_mail_dispatcher
+  @@use_mail_dispatcher = true
   mattr_accessor :mailer_wants_array
   @@mailer_wants_array = false
   mattr_accessor :search_enabled
