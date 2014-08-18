@@ -43,11 +43,13 @@ module MessageCenter
         item.clean if sanitize_text
       end
 
+      sender_receipt = message.create_sender_receipt
+
       message.deliver(recipients)
 
       run_hook :after_send_message, message, recipients, options
 
-      message.receipts.first
+      sender_receipt
     end
 
     #Basic reply method. USE NOT RECOMENDED.
@@ -63,12 +65,14 @@ module MessageCenter
       end
       conversation.touch
 
+      sender_receipt = message.create_sender_receipt
+
       recipients = Array.wrap(recipients) - [sender]
       message.deliver(recipients)
 
       run_hook :after_reply, message, recipients, options
 
-      message.receipts.first
+      sender_receipt
     end
 
     #Replies to the sender of the message in the conversation

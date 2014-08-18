@@ -11,14 +11,14 @@ module MessageCenter::Concerns::Models::Message
     mount_uploader :attachment, AttachmentUploader if defined?(CarrierWave)
   end
 
+  def create_sender_receipt
+    self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
+  end
+
   #Delivers a Message. USE NOT RECOMENDED.
   #Use MessageCenter::Service.send_message instead.
-  def deliver(recipients)
-    # Sender receipt - always created first
-    self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
-
-    super(recipients, 'inbox')
-
+  def deliver(recipients, mailbox_type='inbox')
+    super
   end
 
 end
