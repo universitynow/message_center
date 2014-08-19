@@ -4,19 +4,19 @@ module MessageCenter
   class Service
     include Hooks
 
-    define_hooks :after_notify, :after_send_message, :after_reply
+    define_hooks :after_notify, :after_send_message
 
     # Sends a notification to the recipients
     # options can include:
     #   :sanitize_text - boolean
     #   :send_mail - boolean
     def self.notify(recipients, sender, body, subject, attributes={}, options={})
-      notification = MessageCenter::Notification.create!(attributes) do |item|
-        item.sender = sender
-        item.subject = subject
-        item.body = body
-        item.clean unless options[:sanitize_text] == false
-      end
+
+      notification = MessageCenter::Notification.new(attributes.merge({:sender => sender,
+                                                                       :subject => subject,
+                                                                       :body => body}))
+      notification.clean unless options[:sanitize_text] == false
+      notification.save!
 
       notification.deliver(recipients)
 
@@ -27,21 +27,19 @@ module MessageCenter
 
     # Sends a messages, starting a new conversation, with the recipients
     def self.send_message(recipients, sender, body, subject, attributes={}, options={})
-      sanitize_text = options[:sanitize_text] != false
-      conversation = MessageCenter::Conversation.create! do |convo|
-        convo.subject = subject
-        convo.created_at = attributes[:created_at]
-        convo.updated_at = attributes[:updated_at]
-        convo.clean if sanitize_text
+
+      message = MessageCenter::Message.new(attributes.merge({:sender => sender,
+                                                             :subject => subject,
+                                                             :body => body}))
+
+      message.clean if options[:sanitize_text] != false
+      unless message.conversation
+        message.conversation = message.build_conversation(:subject => message.subject,
+                                                          :created_at => attributes[:created_at],
+                                                          :updated_at => attributes[:updated_at])
       end
 
-      message = MessageCenter::Message.create!(attributes) do |item|
-        item.sender = sender
-        item.conversation = conversation
-        item.subject = subject
-        item.body = body
-        item.clean if sanitize_text
-      end
+      message.save!
 
       sender_receipt = message.create_sender_receipt
 
@@ -56,23 +54,9 @@ module MessageCenter
     #Use reply_to_sender, reply_to_all and reply_to_conversation instead.
     def self.reply(conversation, recipients, sender, body, attributes={}, options={})
       subject = attributes.delete(:subject) || conversation.subject
-      message = MessageCenter::Message.create!(attributes) do |item|
-        item.conversation = conversation
-        item.sender = sender
-        item.subject = subject
-        item.body = body
-        item.clean unless options[:sanitize_text] == false
-      end
-      conversation.touch
-
-      sender_receipt = message.create_sender_receipt
-
       recipients = Array.wrap(recipients) - [sender]
-      message.deliver(recipients)
-
-      run_hook :after_reply, message, recipients, options
-
-      sender_receipt
+      conversation.touch
+      send_message(recipients, sender, body, subject, attributes.merge(:conversation => conversation), options)
     end
 
     #Replies to the sender of the message in the conversation

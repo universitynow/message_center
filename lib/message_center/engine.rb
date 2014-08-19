@@ -15,7 +15,6 @@ module MessageCenter
       if MessageCenter.use_mail_dispatcher && MessageCenter.uses_emails
         MessageCenter::Service.after_notify :call_mail_dispatcher
         MessageCenter::Service.after_send_message :call_mail_dispatcher
-        MessageCenter::Service.after_reply :call_mail_dispatcher
       end
     end
 
