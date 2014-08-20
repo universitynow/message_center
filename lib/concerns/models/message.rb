@@ -4,7 +4,7 @@ module MessageCenter::Concerns::Models::Message
   included do
 
     belongs_to :conversation, :validate => true, :autosave => true, :counter_cache => true
-    validates :sender, :presence => true
+    validates :sender, :presence => true, :on => :create
 
     scope :conversation, ->(conversation) { where(:conversation => conversation) }
 

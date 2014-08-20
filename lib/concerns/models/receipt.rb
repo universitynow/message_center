@@ -11,7 +11,7 @@ module MessageCenter::Concerns::Models::Receipt
     belongs_to :message, :foreign_key => 'item_id'
 
     belongs_to :receiver, :class_name => MessageCenter.messageable_class
-    validates :receiver, :presence => true
+    validates :receiver, :presence => true, :on => :create
 
     scope :recipient, ->(recipient) { where(:receiver => recipient) }
     scope :notifications_receipts, -> { joins(:item).merge(MessageCenter::Notification.all) }
