@@ -3,8 +3,6 @@ module MessageCenter::Concerns::Models::Receipt
 
   included do
 
-    store_accessor :properties, :label, :starred
-
     belongs_to :item
     # alias for backwards compatibility
     alias_method :notification, :item
@@ -28,6 +26,8 @@ module MessageCenter::Concerns::Models::Receipt
     scope :not_deleted, -> { where(:deleted => false) }
     scope :is_read, -> { where(:is_read => true) }
     scope :is_unread, -> { where(:is_read => false) }
+    scope :starred, -> { where(:starred => true)}
+    scope :unstarred, -> { where(:starred => false)}
 
     after_validation :remove_duplicate_errors
   end
@@ -38,7 +38,7 @@ module MessageCenter::Concerns::Models::Receipt
       update_all({:is_read => is_read})
     end
 
-    #Marks the receipt as deleted
+    #Marks all the receipts from the relation as deleted
     def mark_as_deleted(deleted=true)
       update_all({:deleted => deleted})
     end
@@ -46,6 +46,11 @@ module MessageCenter::Concerns::Models::Receipt
     #Marks all the receipts from the relation as trashed
     def move_to_trash(trashed=true)
       update_all({:trashed => trashed})
+    end
+
+    #Marks all the receipts from the relation as starred
+    def mark_as_starred(starred=true)
+      update_all({:starred => starred})
     end
 
     #Moves all the receipts from the relation to inbox
@@ -71,13 +76,8 @@ module MessageCenter::Concerns::Models::Receipt
   end
 
   #Marks as starred
-  def mark_as_starred
-    update_attributes(:starred => true)
-  end
-
-  #Marks as unstarred
-  def mark_as_unstarred
-    update_attributes(:starred => false)
+  def mark_as_starred(starred=true)
+    update_attributes(:starred => starred)
   end
 
   #Marks the receipt as trashed

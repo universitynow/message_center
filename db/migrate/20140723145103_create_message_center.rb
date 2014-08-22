@@ -16,7 +16,7 @@ class CreateMessageCenter < ActiveRecord::Migration
       t.column :trashed, :boolean, :default => false
       t.column :deleted, :boolean, :default => false
       t.column :mailbox_type, :string, :limit => 25
-      t.column :properties, :hstore, :default => {}, :null => false
+      t.column :starred, :boolean, :default => false
       t.column :created_at, :datetime, :null => false
       t.column :updated_at, :datetime, :null => false
     end    

@@ -16,13 +16,13 @@ Gem::Specification.new do |s|
 
   # Gem dependencies
   s.add_runtime_dependency('rails', '>= 4.0.0')
-  s.add_runtime_dependency('pg', '>= 0.17.1')
   s.add_runtime_dependency('hooks', '>= 0.4.0')
 
   # Optional dependencies
   s.add_development_dependency('carrierwave', '>= 0.5.8')
 
   # Specs
+  s.add_development_dependency('pg', '>= 0.17.1')
   s.add_development_dependency('rspec-rails')
   s.add_development_dependency('appraisal', '~> 1.0.0')
   s.add_development_dependency('shoulda-matchers')
