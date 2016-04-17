@@ -13,6 +13,10 @@ describe MessageCenter::MessageMailer, :type => :mailer do
       end
     end
 
+    before do
+      ActionMailer::Base.deliveries.clear
+    end
+
     describe "when sending new message" do
       before do
         @receipt1 = MessageCenter::Service.send_message([entity1, entity2, entity3], sender, "Body", "Subject")

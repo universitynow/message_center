@@ -62,7 +62,7 @@ describe MessageCenter::MailDispatcher do
 
       it "triggers standard deliver chain" do
         expect(mailer).to receive(:send_email).with(mailable, recipient1).and_return email
-        expect(email).to receive :deliver
+        expect(email).to receive :deliver_now
 
         subject.send :send_email, recipient1
       end

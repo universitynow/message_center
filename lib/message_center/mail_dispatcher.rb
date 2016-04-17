@@ -40,7 +40,7 @@ module MessageCenter
       if MessageCenter.custom_deliver_proc
         MessageCenter.custom_deliver_proc.call(mailer, mailable, recipient)
       else
-        mailer.send_email(mailable, recipient).deliver
+        mailer.send_email(mailable, recipient).deliver_now
       end
     end
 

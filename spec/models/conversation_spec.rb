@@ -13,7 +13,7 @@ describe MessageCenter::Conversation, :type => :model do
   let!(:conversation) { message1.conversation.reload }
 
   it { is_expected.to validate_presence_of :subject }
-  it { is_expected.to ensure_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }
+  it { is_expected.to validate_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }
 
   it "should have proper original message" do
     expect(conversation.original_message).to eq(message1)

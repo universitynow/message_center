@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   # Gem dependencies
-  s.add_runtime_dependency('rails', '>= 4.0.0')
+  s.add_runtime_dependency('rails', '>= 4.2.0')
   s.add_runtime_dependency('hooks', '>= 0.4.0')
 
   # Optional dependencies
