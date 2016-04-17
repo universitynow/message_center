@@ -12,10 +12,10 @@ module MessageCenter::Concerns::Models::Message
   end
 
   def create_sender_receipt
-    self.receipts.create!({:receiver=>sender, :mailbox_type=>'sentbox', :is_read=>true})
+    self.receipts.create!({:receiver=>sender, :sender=>sender, :mailbox_type=>'sentbox', :is_read=>true})
   end
 
-  #Delivers a Message. USE NOT RECOMENDED.
+  #Delivers a Message. USE NOT RECOMMENDED.
   #Use MessageCenter::Service.send_message instead.
   def deliver(recipients, mailbox_type='inbox')
     super

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140723145103) do
+ActiveRecord::Schema.define(version: 20160417205113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20140723145103) do
     t.datetime "created_at",                           null: false
     t.boolean  "global",               default: false
     t.datetime "expires_at"
+    t.boolean  "bulk",                 default: false
   end
 
   add_index "message_center_items", ["conversation_id"], name: "index_message_center_items_on_conversation_id", using: :btree
@@ -58,10 +59,12 @@ ActiveRecord::Schema.define(version: 20140723145103) do
     t.hstore   "properties",              default: {},    null: false
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
+    t.integer  "sender_id"
   end
 
   add_index "message_center_receipts", ["item_id"], name: "index_message_center_receipts_on_item_id", using: :btree
   add_index "message_center_receipts", ["receiver_id", "mailbox_type"], name: "index_message_center_receipts_on_receiver_id_and_mailbox_type", using: :btree
+  add_index "message_center_receipts", ["sender_id", "receiver_id"], name: "index_message_center_receipts_on_sender_id_and_receiver_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
