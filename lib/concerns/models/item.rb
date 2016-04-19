@@ -17,13 +17,13 @@ module MessageCenter::Concerns::Models::Item
     scope :unread, -> { joins(:receipts).merge(MessageCenter::Receipt.is_unread) }
   end
 
-  #Delivers a Notification. USE NOT RECOMENDED.
+  #Delivers a Notification. USE NOT RECOMMENDED.
   #Use MessageCenter::Service.notify instead
   def deliver(recipients, mailbox_type=nil)
     #Receiver receipts
     self.transaction do
       Array.wrap(recipients).each do |recipient|
-        self.receipts.create!({:receiver=>recipient, :mailbox_type=> mailbox_type})
+        self.receipts.create!({:receiver=>recipient, :mailbox_type=> mailbox_type, :sender => self.sender})
       end
     end
   end

@@ -11,8 +11,8 @@ describe MessageCenter::Notification, :type => :model do
   it { is_expected.to validate_presence_of :subject }
   it { is_expected.to validate_presence_of :body }
 
-  it { is_expected.to ensure_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }
-  it { is_expected.to ensure_length_of(:body).is_at_most(MessageCenter.body_max_length) }
+  it { is_expected.to validate_length_of(:subject).is_at_most(MessageCenter.subject_max_length) }
+  it { is_expected.to validate_length_of(:body).is_at_most(MessageCenter.body_max_length) }
 
   it "should notify one user" do
     MessageCenter::Service.notify(@entity1, nil, "Body", "Subject")
